@@ -1,0 +1,3 @@
+{"at": "2026-10-10T11:59:11-0400", "event": "start", "briefs": ["briefs/brief-a.md", "briefs/brief-b.md"], "tool_api": "tools/openapi.json", "slot": "brief-ab", "builder_model": "claude-opus-5-5"}
+{"at": "2026-10-10T11:59:11-0400", "event": "rules_reused", "path": "out/brief-ab.rules.json"}
+{"at": "2026-10-10T11:59:11-0400", "event": "rules", "path": "/Users/mehmetbattal/Desktop/projects/build-the-builder/out/brief-ab.rules.json", "validation_errors": []}

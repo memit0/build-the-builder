@@ -1,0 +1,60 @@
+{
+ "agent_id": "7ada9804-a8ca-4082-a4fa-c14235f9b5f7",
+ "simulation_id": "320cb841-d340-4e0c-865e-4af7fe7e5486",
+ "iteration_id": "962af623-cc0f-40ef-a3fc-7c9d6557c7c9",
+ "seconds": 274,
+ "passed": 1,
+ "total": 1,
+ "runs": 1,
+ "final": [
+  {
+   "id": "PUB-06",
+   "family": "Amounts",
+   "passes": 1,
+   "runs": 1,
+   "pass": true
+  }
+ ],
+ "rows": [
+  {
+   "id": "PUB-06",
+   "level": "hard",
+   "family": "Amounts",
+   "pass": true,
+   "failed": [],
+   "call_id": "2472b8b6-0bdb-4cd4-a4c9-dddd34e74a37",
+   "tools": [
+    "verify_identity",
+    "verify_identity",
+    "get_account",
+    "create_promise",
+    "close_call"
+   ],
+   "customer_id": "c_27c67c97-ad3",
+   "slowest_turn_s": 1.4,
+   "ended": "assistant-ended-call"
+  }
+ ],
+ "all_rows": [
+  [
+   {
+    "id": "PUB-06",
+    "level": "hard",
+    "family": "Amounts",
+    "pass": true,
+    "failed": [],
+    "call_id": "2472b8b6-0bdb-4cd4-a4c9-dddd34e74a37",
+    "tools": [
+     "verify_identity",
+     "verify_identity",
+     "get_account",
+     "create_promise",
+     "close_call"
+    ],
+    "customer_id": "c_27c67c97-ad3",
+    "slowest_turn_s": 1.4,
+    "ended": "assistant-ended-call"
+   }
+  ]
+ ]
+}

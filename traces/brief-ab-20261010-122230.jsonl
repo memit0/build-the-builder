@@ -1,0 +1,2 @@
+{"at": "2026-10-10T12:22:30-0400", "event": "start", "briefs": ["briefs/brief-a.md", "briefs/brief-b.md"], "tool_api": "tools/openapi.json", "slot": "brief-ab", "builder_model": "claude-opus-5-5"}
+{"at": "2026-10-10T12:25:21-0400", "event": "model_call", "model": "claude-opus-5-5", "purpose": "extract the rule sheet from the brief", "seconds": 171.3, "cost_usd": 0.2833172, "ok": true}

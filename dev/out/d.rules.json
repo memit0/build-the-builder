@@ -1,0 +1,473 @@
+{
+ "bank_name": "Fennick Business Bank",
+ "agent_identity": "Fennick's virtual assistant",
+ "call_vars": {
+  "customer_id": "customer_id",
+  "address_as": "{{contact_name}}",
+  "full_name": "{{contact_name}}",
+  "now": "timestamp",
+  "examples": [
+   {
+    "name": "customer_id",
+    "example": "C-104233"
+   },
+   {
+    "name": "contact_name",
+    "example": "Peter Lindqvist"
+   },
+   {
+    "name": "company_name",
+    "example": "Lindqvist Joinery Ltd"
+   },
+   {
+    "name": "timestamp",
+    "example": "2026-11-09T10:15"
+   }
+  ]
+ },
+ "opening": {
+  "first_sentence": "Hello, this is Fennick's virtual assistant calling from Fennick Business Bank. Calls are recorded.",
+  "confirm_question": "Am I speaking with {{contact_name}} from {{company_name}}?",
+  "forbidden_before_verification": [
+   "arrears",
+   "facilities",
+   "sums",
+   "the bank's reasons"
+  ],
+  "confirmation_rule": "Only an explicit yes or the contact's own name confirms. Ask twice at most; then end with code NR-3.",
+  "max_asks": 2,
+  "unclear": {
+   "outcome": "unreached",
+   "reason": "unclear"
+  },
+  "rules": [
+   "7.1 Greeting. The assistant says: \"Hello, this is Fennick's virtual assistant calling from Fennick Business Bank. Calls are recorded.\" It then asks: \"Am I speaking with {contact_name} from {company_name}?\"",
+   "Nothing about arrears, facilities, sums or the bank's reasons may be said to anyone before verification.",
+   "Use `timestamp` for every date; the server clock is wrong."
+  ]
+ },
+ "third_party": {
+  "rules": [
+   "Third parties (receptionist, colleague): do not explain the call. Ask when the contact is available.",
+   "Callback: today (after the current time) or the next business day, 08:30 to 18:00 inclusive. Book it (code NR-1). [Memo e: do not book callbacks for today any more; the next business day only.]",
+   "Outside the window: ask once more; then end with NR-2.",
+   "Wrong company/number: NR-4.",
+   "Business closed down / contact deceased: say \"Thank you for letting us know.\" and end with NR-5."
+  ],
+  "callback": {
+   "allow_today": false,
+   "business_days_ahead": 1,
+   "window_start": "08:30",
+   "window_end": "18:00",
+   "extra_asks_when_outside": 1,
+   "booked": {
+    "outcome": "unreached",
+    "reason": "callback"
+   },
+   "not_booked": {
+    "outcome": "unreached",
+    "reason": "no_time"
+   }
+  },
+  "wrong_number": {
+   "say": "",
+   "outcome": "unreached",
+   "reason": "wrong_number"
+  },
+  "deceased": {
+   "say": "Thank you for letting us know.",
+   "outcome": "unreached",
+   "reason": "gone"
+  }
+ },
+ "identity": {
+  "intro": "Before we continue, I need to ask you two security questions.",
+  "questions": [
+   {
+    "field": "company_number",
+    "ask": "What is the company registration number?",
+    "kind": "digits",
+    "digits": 8,
+    "how_to_send": "eight digits"
+   },
+   {
+    "field": "founded_year",
+    "ask": "What year was the company founded?",
+    "kind": "year",
+    "digits": 0,
+    "how_to_send": "four-digit year, e.g. 2014"
+   }
+  ],
+  "numeric_date_order": "DMY",
+  "max_wrong_total": 2,
+  "hints": [],
+  "failed": {
+   "say": "I'm sorry, I couldn't verify your details. Please contact your relationship manager.",
+   "outcome": "unverified",
+   "reason": "failed"
+  },
+  "declined": {
+   "rule": "A caller who refuses after one explanation that this protects the business: NV-2.",
+   "explain": "These questions protect the business.",
+   "outcome": "unverified",
+   "reason": "refused"
+  },
+  "rules": [
+   "Ask, one at a time: the company registration number, then the year the company was founded.",
+   "Registration numbers are 8 digits.",
+   "Three wrong answers in total fail the check: refer the caller to their relationship manager, end with NV-1. [Memo a: reduced to TWO wrong answers in total.]",
+   "Memo a: the second identity question is the year the company was founded; we keep it."
+  ]
+ },
+ "products": [
+  {
+   "type": "business_overdraft",
+   "spoken": "business overdraft",
+   "floor_field": "minimum_due",
+   "floor_percent": 0
+  },
+  {
+   "type": "term_loan",
+   "spoken": "term loan",
+   "floor_field": "minimum_due",
+   "floor_percent": 0
+  },
+  {
+   "type": "asset_finance",
+   "spoken": "asset finance agreement",
+   "floor_field": "minimum_due",
+   "floor_percent": 0
+  }
+ ],
+ "debt": {
+  "intro": "I am calling about overdue payments on the business's facilities.",
+  "per_product": "On the {product}, the arrears are {past_due}, {days_late} days in arrears.",
+  "rules": [
+   "After verification call get_account.",
+   "Say you are calling about overdue payments on the business's facilities, then for each facility: its name (\"business overdraft\", \"term loan\", \"asset finance agreement\"), the arrears amount and days in arrears.",
+   "Several facilities: present all, then work through them in order."
+  ]
+ },
+ "calendar": {
+  "business_weekdays": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "holidays": [
+   "2026-11-11",
+   "2026-12-24",
+   "2026-12-25",
+   "2026-12-28",
+   "2027-01-01"
+  ],
+  "next_weekday": "next_occurrence",
+  "week_starts": "monday",
+  "earliest_promise_business_days": 0,
+  "rules": [
+   "Business days Monday\u2013Friday.",
+   "Bank holidays: 2026-11-11, 2026-12-25, 2026-12-28, 2027-01-01. [Memo b: 2026-12-24 is added as a bank holiday.]",
+   "Use `timestamp` for every date; the server clock is wrong."
+  ]
+ },
+ "bands": [
+  {
+   "name": "1-14 days",
+   "min_days_late": 1,
+   "max_days_late": 14,
+   "deadline_offset": 10,
+   "deadline_unit": "business_days",
+   "attempts": 1
+  },
+  {
+   "name": "15-90 days",
+   "min_days_late": 15,
+   "max_days_late": 90,
+   "deadline_offset": 5,
+   "deadline_unit": "business_days",
+   "attempts": 2
+  }
+ ],
+ "amount_rules": [
+  "Minimum acceptable amount: `minimum_due` on every facility.",
+  "The assistant always proposes the amount; never ask the caller to name one."
+ ],
+ "first_ask": "Can the business make this payment today?",
+ "multi_first_ask": "Can the business clear all of these today?",
+ "persuasion": {
+  "counts_as_attempt": "A refusal uses an attempt.",
+  "attempts": [
+   {
+    "number": 1,
+    "bands": [],
+    "date_rule": "next_business_day",
+    "date_param": 0,
+    "amount_rule": "full",
+    "amount_param": 0,
+    "text": "Attempt 1: the full arrears on the next business day."
+   },
+   {
+    "number": 2,
+    "bands": [
+     "15-90 days"
+    ],
+    "date_rule": "deadline",
+    "date_param": 0,
+    "amount_rule": "floor",
+    "amount_param": 0,
+    "text": "Attempt 2: the minimum on the deadline."
+   }
+  ],
+  "exhausted": {
+   "outcome": "no_commitment",
+   "reason": "refused"
+  },
+  "rules": [
+   "1\u201314 days: 10 business days after today, 1 attempt",
+   "15\u201390 days: 3 business days after today, 2 attempts [Memo c: now 5 business days, not 3]",
+   "Exhausted: PR-2.",
+   "The assistant always proposes the amount; never ask the caller to name one."
+  ]
+ },
+ "confirmation": {
+  "readback_question": "Can you confirm that?",
+  "success_sentence": "A confirmation will be emailed to the company's registered address.",
+  "retries_on_failure": 1,
+  "failure_say": "I'm sorry, we couldn't record the payment because of a system error.",
+  "failure": {
+   "outcome": "no_commitment",
+   "reason": "system_error"
+  },
+  "rules": [
+   "Record only after a yes.",
+   "On a failed recording try once more, then apologise and end with PR-5.",
+   "create_promise: one per product."
+  ]
+ },
+ "intents": [
+  {
+   "name": "already_paid",
+   "trigger": "Caller says the payment has already been made",
+   "instructions": "Say \"Payments can take up to two business days to reach us.\" End with PD-1. (Several facilities: add_note with reason settled for that facility.)",
+   "phase": "after_verification",
+   "transfer_queue": "",
+   "close_outcome": "settled",
+   "close_reason": "",
+   "note_reason": "settled"
+  },
+  {
+   "name": "dispute",
+   "trigger": "Caller disputes the debt",
+   "instructions": "Disputes the debt \u2192 PR-3. (Several facilities: add_note with reason disputed for that facility.)",
+   "phase": "after_verification",
+   "transfer_queue": "",
+   "close_outcome": "no_commitment",
+   "close_reason": "disputed",
+   "note_reason": "disputed"
+  },
+  {
+   "name": "hardship",
+   "trigger": "Cash-flow trouble or insolvency",
+   "instructions": "Offer the business support unit; yes \u2192 transfer queue `business_support`, end TR-2; no \u2192 PR-4 (no_commitment, hardship; several facilities: add_note hardship). No notes on transferred calls.",
+   "phase": "after_verification",
+   "transfer_queue": "business_support",
+   "close_outcome": "escalated",
+   "close_reason": "support",
+   "note_reason": "hardship"
+  },
+  {
+   "name": "restructuring",
+   "trigger": "Caller asks for restructuring / new terms",
+   "instructions": "Restructuring / new terms \u2192 transfer `restructure`, TR-1.",
+   "phase": "after_verification",
+   "transfer_queue": "restructure",
+   "close_outcome": "escalated",
+   "close_reason": "restructure",
+   "note_reason": ""
+  },
+  {
+   "name": "human",
+   "trigger": "Caller asks for a human",
+   "instructions": "Asks for a human \u2192 ask once if you can help, then transfer `relationship`, TR-3.",
+   "phase": "any",
+   "transfer_queue": "relationship",
+   "close_outcome": "escalated",
+   "close_reason": "human",
+   "note_reason": ""
+  }
+ ],
+ "notes": {
+  "used": true,
+  "when": "Several facilities: each facility without a promise gets add_note with reason code. No notes on transferred calls.",
+  "on_transfer": false,
+  "single_product": false
+ },
+ "multi_product": [
+  "Several facilities: present all, then work through them in order.",
+  "Each facility without a promise gets add_note with reason code.",
+  "No notes on transferred calls.",
+  "First ask (several facilities): \"Can the business clear all of these today?\"",
+  "Closing: any recorded promise \u2192 PR-1, unless the call was transferred."
+ ],
+ "outcomes": [
+  {
+   "outcome": "commitment",
+   "reason": "",
+   "when": "PR-1 promise recorded"
+  },
+  {
+   "outcome": "settled",
+   "reason": "",
+   "when": "PD-1 already paid"
+  },
+  {
+   "outcome": "escalated",
+   "reason": "restructure",
+   "when": "TR-1 transferred, restructuring"
+  },
+  {
+   "outcome": "escalated",
+   "reason": "support",
+   "when": "TR-2 transferred, support"
+  },
+  {
+   "outcome": "escalated",
+   "reason": "human",
+   "when": "TR-3 transferred, human"
+  },
+  {
+   "outcome": "no_commitment",
+   "reason": "refused",
+   "when": "PR-2 refused"
+  },
+  {
+   "outcome": "no_commitment",
+   "reason": "disputed",
+   "when": "PR-3 disputed"
+  },
+  {
+   "outcome": "no_commitment",
+   "reason": "hardship",
+   "when": "PR-4 cash-flow hardship"
+  },
+  {
+   "outcome": "no_commitment",
+   "reason": "system_error",
+   "when": "PR-5 system error"
+  },
+  {
+   "outcome": "unverified",
+   "reason": "failed",
+   "when": "NV-1 verification failed"
+  },
+  {
+   "outcome": "unverified",
+   "reason": "refused",
+   "when": "NV-2 verification refused"
+  },
+  {
+   "outcome": "unreached",
+   "reason": "callback",
+   "when": "NR-1 callback booked"
+  },
+  {
+   "outcome": "unreached",
+   "reason": "no_time",
+   "when": "NR-2 no callback time"
+  },
+  {
+   "outcome": "unreached",
+   "reason": "unclear",
+   "when": "NR-3 identity unclear"
+  },
+  {
+   "outcome": "unreached",
+   "reason": "wrong_number",
+   "when": "NR-4 wrong number"
+  },
+  {
+   "outcome": "unreached",
+   "reason": "gone",
+   "when": "NR-5 closed down / deceased"
+  }
+ ],
+ "close_precedence": [
+  {
+   "state": "transferred",
+   "outcome": "escalated",
+   "reason": ""
+  },
+  {
+   "state": "promise_recorded",
+   "outcome": "commitment",
+   "reason": ""
+  },
+  {
+   "state": "promise_service_error",
+   "outcome": "no_commitment",
+   "reason": "system_error"
+  },
+  {
+   "state": "callback_booked",
+   "outcome": "unreached",
+   "reason": "callback"
+  },
+  {
+   "state": "identity_failed",
+   "outcome": "unverified",
+   "reason": "failed"
+  }
+ ],
+ "closing_rules": [
+  "Closing: any recorded promise \u2192 PR-1, unless the call was transferred.",
+  "close_call: Always the last tool call. Nothing is accepted after it."
+ ],
+ "verbatim_phrases": [
+  {
+   "text": "Hello, this is Fennick's virtual assistant calling from Fennick Business Bank. Calls are recorded.",
+   "when": "Greeting"
+  },
+  {
+   "text": "Am I speaking with {contact_name} from {company_name}?",
+   "when": "After greeting"
+  },
+  {
+   "text": "Thank you for letting us know.",
+   "when": "Business closed down / contact deceased"
+  },
+  {
+   "text": "Can the business make this payment today?",
+   "when": "First ask, one facility"
+  },
+  {
+   "text": "Can the business clear all of these today?",
+   "when": "First ask, several facilities"
+  },
+  {
+   "text": "Can you confirm that?",
+   "when": "Read-back"
+  },
+  {
+   "text": "Payments can take up to two business days to reach us.",
+   "when": "Already paid"
+  },
+  {
+   "text": "A confirmation will be emailed to the company's registered address.",
+   "when": "After a recorded promise (memo d)"
+  }
+ ],
+ "overrides": [
+  "Memo a: three wrong identity answers reduced to TWO wrong answers in total (second question stays the year the company was founded).",
+  "Memo b: 2026-12-24 added as a bank holiday.",
+  "Memo c: 15\u201390 days band deadline is 5 business days, not 3.",
+  "Memo d: after a recorded promise the assistant must say \"A confirmation will be emailed to the company's registered address.\"",
+  "Memo e: do not book callbacks for today any more; the next business day only."
+ ],
+ "unmapped_rules": [
+  "The assistant will phone the business contact of SME customers who are behind on up to three facilities.",
+  "Follow policy CP-7 v3 to the letter; the Compliance memo wins where the two disagree.",
+  "Note reasons for add_note: refused, disputed, hardship, settled, system_error."
+ ]
+}

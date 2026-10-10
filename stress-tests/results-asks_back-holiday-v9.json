@@ -1,0 +1,60 @@
+{
+ "agent_id": "7ada9804-a8ca-4082-a4fa-c14235f9b5f7",
+ "simulation_id": "2f582d03-98b4-472f-9cbe-1aaa2e34b2e3",
+ "iteration_id": "cde8c1ef-5e8c-4e64-8611-e79a662fd6d8",
+ "seconds": 262,
+ "passed": 1,
+ "total": 1,
+ "runs": 1,
+ "final": [
+  {
+   "id": "PUB-07",
+   "family": "Dates",
+   "passes": 1,
+   "runs": 1,
+   "pass": true
+  }
+ ],
+ "rows": [
+  {
+   "id": "PUB-07",
+   "level": "hard",
+   "family": "Dates",
+   "pass": true,
+   "failed": [],
+   "call_id": "5af79802-447b-406d-bd0c-7363d6308bd3",
+   "tools": [
+    "verify_identity",
+    "verify_identity",
+    "get_account",
+    "create_promise",
+    "close_call"
+   ],
+   "customer_id": "c_5b54e2ca-b24",
+   "slowest_turn_s": 1.1,
+   "ended": "assistant-ended-call"
+  }
+ ],
+ "all_rows": [
+  [
+   {
+    "id": "PUB-07",
+    "level": "hard",
+    "family": "Dates",
+    "pass": true,
+    "failed": [],
+    "call_id": "5af79802-447b-406d-bd0c-7363d6308bd3",
+    "tools": [
+     "verify_identity",
+     "verify_identity",
+     "get_account",
+     "create_promise",
+     "close_call"
+    ],
+    "customer_id": "c_5b54e2ca-b24",
+    "slowest_turn_s": 1.1,
+    "ended": "assistant-ended-call"
+   }
+  ]
+ ]
+}

@@ -430,7 +430,7 @@
     },
     "checks": [
       "exactly one promise in the ledger after the retry",
-      "agent does not say 'recorded' before a successful call"
+      "agent does not say the payment promise was recorded before create_promise succeeds; the required opening disclosure that the call is recorded is allowed"
     ],
     "faults": [
       {
