@@ -17,16 +17,12 @@ What we know so far:
 
 ```
 builder/
-  build.py        entry: build.py BRIEF TOOL_API [--slot NAME] [--test]  → saves + exports workflow, writes trace
-  extract.py      brief.md (+ tool API) → rules.json   (Claude, JSON-schema output, 1–3 calls)
-  schema.py       the rule-sheet JSON schema + validate(rules, api) cross-checks
+  build.py        entry: build.py BRIEF TOOL_API [--slot NAME] [--test]  → saves + exports workflow; also holds Trace and the chat smoke test
+  extract.py      brief.md (+ tool API) → rules.json   (Claude, JSON-schema output, 1–3 calls) + validate(rules, api) cross-checks
   api_spec.py     parse openapi.json deterministically: base URL, per-tool fields, enums
-  generate.py     rules.json + api_spec → workflow dict (pure Python, no LLM)
+  generate.py     rules.json + api_spec → workflow dict (pure Python, no LLM), incl. prompt templates filled from rules
   snippets.py     parameterized Python code-step templates (dates, amounts, identity, hooks)
-  prompts.py      prompt templates filled from rules (opening, identity, negotiate, closing…)
   lint.py         static checks on the generated workflow
-  smoke.py        a few chat/message turns as a self-test (no simulation queue)
-  trace.py        append-only trace: start/end, each model call (model + purpose), IDs, tests
 dev/
   briefs/         synthetic briefs C (clean, other values) and D (raw mail+memo+code list) + their tool APIs
   check.py        run extract+generate+lint on every brief in briefs/ and dev/briefs/

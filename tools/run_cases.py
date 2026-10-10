@@ -4,7 +4,7 @@
 
 Needs FREYA_API_KEY (your workspace) and FREYA_BANK_TEAM_KEY (any secret of 16+ characters your team picks, the same one every time).
 """
-import argparse, hashlib, json, os, pathlib, sys, time
+import argparse, hashlib, json, pathlib, sys, time
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "tools"))
 import freya
