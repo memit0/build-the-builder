@@ -1,0 +1,5 @@
+{"at": "2026-10-10 10:26:05", "agent_id": "9271b429-5651-4268-832d-09b8b86aef03", "brief": "A", "runs": 1, "passed": 0, "total": 10, "seconds": 254, "failed": ["PUB-01", "PUB-02", "PUB-03", "PUB-04", "PUB-05", "PUB-06", "PUB-07", "PUB-08", "PUB-09", "PUB-10"]}
+{"at": "2026-10-10 10:41:37", "agent_id": "433ab678-b062-40b7-b712-a7b818972c87", "brief": "A", "runs": 1, "passed": 8, "total": 10, "seconds": 376, "failed": ["PUB-06", "PUB-08"]}
+{"at": "2026-10-10 10:45:57", "agent_id": "433ab678-b062-40b7-b712-a7b818972c87", "brief": "A", "runs": 1, "passed": 8, "total": 10, "seconds": 179, "failed": ["PUB-06", "PUB-10"]}
+{"at": "2026-10-10 10:51:14", "agent_id": "433ab678-b062-40b7-b712-a7b818972c87", "brief": "A", "runs": 1, "passed": 5, "total": 10, "seconds": 266, "failed": ["PUB-05", "PUB-07", "PUB-08", "PUB-09", "PUB-10"]}
+{"at": "2026-10-10 10:56:08", "agent_id": "433ab678-b062-40b7-b712-a7b818972c87", "brief": "A", "runs": 1, "passed": 7, "total": 10, "seconds": 220, "failed": ["PUB-01", "PUB-03", "PUB-04"]}

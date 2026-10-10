@@ -1,0 +1,67 @@
+  [Skill] {'skill': 'build-phone-agent', 'args': 'briefs/brief-a.md'}
+  [Bash] {'command': 'ls -R | head -50 && cat briefs/brief-a.md', 'description': 'List kit files and read brief'}
+  [Bash] {'command': 'cat tools/openapi.json docs/workflow-format.md docs/tools-and-code.md examples/base-agent.json', 'descripti
+  [Bash] {'command': 'python3 -c "\nimport json;d=json.load(open(\'tools/openapi.json\'))\nfor p,v in d[\'paths\'].items():\n  fo
+  [Read] {'file_path': '/Users/mehmetbattal/Desktop/projects/build-the-builder/docs/workflow-format.md'}
+Reading the platform docs now; next I'll read the tools doc and the example agent, then write the workflow.
+  [Read] {'file_path': '/Users/mehmetbattal/Desktop/projects/build-the-builder/docs/tools-and-code.md'}
+  [Bash] {'command': 'cat examples/base-agent.json; cat examples/agent_builder.py; sed -n 1,80p tools/run_cases.py; python3 -c "i
+  [Bash] {'command': 'python3 -c "\nimport json;d=json.load(open(\'public-test-set.json\'))\nfor c in d:\n  if c[\'brief\']!=\'A\
+  [Bash] {'command': 'cat tools/score.py; grep -n "def " freya.py; sed -n 1,60p docs/api.md', 'description': 'Read scorer and API
+  [Bash] {'command': 'source env.sh >/dev/null 2>&1; python3 - <<\'EOF\'\nimport sys; sys.path.insert(0,\'tools\')\nfrom score im
+Probing done. The mock doesn't log unknown paths, so I can use code hooks to block invalid promises and callbacks. Writing a generator for the workflow now.
+  [Bash] {'command': 'mkdir -p /Users/mehmetbattal/Desktop/projects/build-the-builder/out /Users/mehmetbattal/Desktop/projects/bu
+  [Write] {'file_path': '/Users/mehmetbattal/Desktop/projects/build-the-builder/gen/brief_a.py', 'content': '"""Generates out/brie
+  [Edit] {'replace_all': False, 'file_path': '/Users/mehmetbattal/Desktop/projects/build-the-builder/gen/brief_a.py', 'old_string
+  [Bash] {'command': 'python3 gen/brief_a.py && python3 - <<\'EOF\'\n# local test of the code-node snippets with a fake vars dict
+  [Bash] {'command': 'python3 - <<\'EOF\'\nimport json\nsrc=open(\'gen/brief_a.py\').read()\nns={\'__file__\':\'gen/brief_a.py\'}
+  [Bash] {'command': 'sed -i \'\' "s/end = deadline + datetime.timedelta(days=10)/end = deadline + datetime.timedelta(days=3)/" g
+  [Bash] {'command': 'source env.sh >/dev/null 2>&1; python3 -c "\nimport freya,json\nfreya.export_workflow(\'f03e4107-284f-4d75-
+Workflow saved (agent 433ab678…). Running the first test pass on the 10 Brief A customers now, which takes 3 to 11 minutes.
+  [Bash] {'command': 'source env.sh >/dev/null 2>&1; python3 tools/run_cases.py 433ab678-b062-40b7-b712-a7b818972c87 --brief A --
+The test runner timed out on a network read while polling, so this run produced no results. Rerunning.
+  [Bash] {'command': 'source env.sh >/dev/null 2>&1; python3 tools/run_cases.py 433ab678-b062-40b7-b712-a7b818972c87 --brief A --
+8 of 10 passed on the first run. Checking the transcripts for the two that failed (PUB-06 and PUB-08).
+  [Bash] {'command': 'source env.sh >/dev/null 2>&1; python3 - <<\'EOF\'\nimport json,sys\nsys.path.insert(0,\'tools\'); import f
+  [Bash] {'command': 'source env.sh >/dev/null 2>&1; python3 - <<\'EOF\'\nimport json,sys\nsys.path.insert(0,\'tools\'); import f
+Both failures are platform tool errors, not wrong decisions. In PUB-06 the promise was recorded, but the platform reported an error. Looking at the error details.
+  [Bash] {'command': "source env.sh >/dev/null 2>&1; python3 - <<'EOF'\nimport json,sys\nsys.path.insert(0,'tools'); import freya
+  [Bash] {'command': 'python3 - <<\'EOF\'\np=\'gen/brief_a.py\'; s=open(p).read()\n# transfer: drop pre-hook; post-hook reads que
+Saved as version 2. Running the second test pass.
+  [Bash] {'command': 'source env.sh >/dev/null 2>&1; python3 tools/run_cases.py 433ab678-b062-40b7-b712-a7b818972c87 --brief A --
+Both failures are now judge-only; the bank ledgers were correct. PUB-10 was flagged because the opening line "This call is recorded" contains the word "recorded". Reading PUB-06's full reason.
+  [Bash] {'command': "source env.sh >/dev/null 2>&1; python3 - <<'EOF'\nimport json,sys\nsys.path.insert(0,'tools'); import freya
+  [Bash] {'command': 'python3 - <<\'EOF\'\np=\'gen/brief_a.py\'; s=open(p).read()\ns=s.replace("calling from Freya Bank. This cal
+  [Bash] {'command': 'grep -n "call is recorded" gen/brief_a.py; sed -i \'\' \'s/This call is recorded\\./We are recording this c
+Saved as version 3. Running the third test pass.
+  [Bash] {'command': 'source env.sh >/dev/null 2>&1; python3 tools/run_cases.py 433ab678-b062-40b7-b712-a7b818972c87 --brief A --
+This pass hit the same sandbox outage again (5 calls broke on "Failed to reach snekbox"). Checking how much of the run it affected before I decide how to make the agent depend less on hooks.
+  [Bash] {'command': "source env.sh >/dev/null 2>&1; python3 - <<'EOF'\nimport json,sys\nsys.path.insert(0,'tools'); import freya
+  [Bash] {'command': 'python3 - <<\'EOF\'\np=\'gen/brief_a.py\'; s=open(p).read()\ns=s.replace(\'["field", "answer"], post=VERIFY
+Saved as version 4. Running the final test pass.
+  [Bash] {'command': 'source env.sh >/dev/null 2>&1; python3 tools/run_cases.py 433ab678-b062-40b7-b712-a7b818972c87 --brief A --
+This pass got worse in a new way (7/10), so I'm checking those three calls before reporting.
+  [Bash] {'command': "source env.sh >/dev/null 2>&1; python3 - <<'EOF'\nimport json,sys\nsys.path.insert(0,'tools'); import freya
+  [Bash] {'command': 'python3 - <<\'EOF\'\np=\'gen/brief_a.py\'; s=open(p).read()\ns=s.replace(\'    ["field", "answer"],\\n    m
+I built the Brief A agent and ran four test passes. Only 7 of the 10 practice customers passed the last run. Most failures in the last three passes came from an outage in the platform's code sandbox ("snekbox"), which runs the agent's code nodes and tool hooks. It was unreachable for a minute or two several times.
+
+**How the agent works:** an opening step, then the security questions, then the account is loaded and code works out the deal terms, then the payment talk, then a closing step. Code handles all the date and amount rules: business days, bank holidays, the deadline for each lateness band, the lowest amount allowed, the persuasion attempts, the callback window, and a table of which promise dates are allowed. Code also blocks a promise or callback that breaks the brief before it reaches the bank. The agent only moves to the next step on a tool result.
+
+**Results:**
+
+| Pass | Passed | What went wrong |
+|---|---|---|
+| 1 | 8/10 | Both failures were sandbox outages |
+| 2 | 8/10 | Bank records all correct. The judge failed PUB-10 because the opening said "This call is recorded", and PUB-06 because the agent offered the minimum payment twice. I fixed both. |
+| 3 | 5/10 | All 5 failures were sandbox outages. Every call outside the outage window passed. |
+| 4 | 7/10 | PUB-01 and PUB-04 failed because the code steps were down: the agent spoke raw placeholders and recorded a date past the deadline. PUB-03 failed because of my own change. |
+
+For pass 4 I had taken the code hooks off the identity check, transfer and close tools to reduce exposure to the outage. That caused PUB-03 to fail: the agent treated a wrong date of birth as correct. I put those hooks back and saved the result as version 5. That version is the one on the platform now, and **it has not been tested** because the three fix rounds were used up. Its wiring is the same as the version that passed every call outside the outage window in pass 3.
+
+**Decision for you:** the agent depends on the sandbox for its code steps and several tools, so a sandbox outage during scoring will fail calls whatever the agent does. Taking that dependency out mostly means moving the date and amount rules back into prompts. Pass 4 showed the agent then stops respecting the identity-check result, which is why I kept the hooks.
+
+The workflow is in `out/brief-a.workflow.json` and is generated by `gen/brief_a.py`; run results are in `results/run-a1.json` to `run-a4.json`.
+
+workflow_id f03e4107-284f-4d75-838d-37f68214a107, agent_id 433ab678-b062-40b7-b712-a7b818972c87, 7 / 10 customers passed in the last run.
+
+done: 35 turns, 1825 s, $3.33. Trace: /Users/mehmetbattal/Desktop/projects/build-the-builder/traces/20261010-102617.jsonl

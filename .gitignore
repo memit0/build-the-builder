@@ -1,0 +1,4 @@
+env.sh
+.venv/
+__pycache__/
+.personas.json
