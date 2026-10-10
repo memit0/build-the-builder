@@ -1,7 +1,7 @@
 """Brief (+ tool API) -> rules.json: the rule sheet the generator reads. Claude extracts, code validates."""
 import asyncio, datetime, json, os, re, time
 
-import api_spec
+import api_spec, policy
 
 MODEL = os.environ.get("BUILDER_MODEL", "claude-opus-5-5")
 
@@ -152,6 +152,23 @@ SCHEMA = O(
 
 # ---------------------------------------------------------------- the model call
 
+EXECUTION = O(
+    refused_note_reason=S("Exact add_note reason code for exhausted persuasion; empty if notes unused"),
+    minimum_offer=O(limit=I("Maximum discretionary floor offers; -1 only if unspecified, 0 forbids."),
+                    scope=E(["per_product", "per_call"]), repeat_on_attempts=A(I(), "Numbered attempts explicitly allowed to repeat the floor, even after the limit."),
+                    source=S("Exact quote supporting the limit and exceptions; never infer a limit.")),
+    intent_actions=A(O(intent=S("Existing intents[].name"), stop_negotiation=B("Disable persuasion after this intent"),
+                       allow_customer_proposal=B("Allow a customer-initiated promise despite stopping persuasion"),
+                       forbid_promise=B("Never record for affected product"), source=S("Exact source quote"))),
+)
+REQUIREMENT = O(id=S(), source=S("Exact quote from the brief; enumerate each obligation separately"),
+                critical=B("Numbers, prerequisites, prohibitions, recording and closing are critical"),
+                status=E(["active", "superseded"]), paths=A(S(), "Dot paths including array indices into this rule sheet; [] means unsupported"))
+SCHEMA["properties"].update(execution=EXECUTION, requirements=A(REQUIREMENT))
+SCHEMA["required"] += ["execution", "requirements"]
+INVENTORY_SCHEMA = O(requirements=A(O(id=S(), source=S(), critical=B(), status=E(["active", "superseded"]))))
+AUDIT_SCHEMA = O(requirements=A(REQUIREMENT), errors=TEXTS("Every missing, incorrect or contradictory requirement. Empty only after checking all of them."))
+
 SYS = """You turn a bank's collection-call brief into a precise JSON rule sheet. A program builds a phone agent from your sheet, so every value must come from the brief.
 - Read every word. Most failures come from one skipped rule.
 - The brief may be raw bank material: mails, a policy extract, memos and code lists. A later or dated instruction (a memo, an amendment) replaces an earlier one. Apply it and record the change in `overrides`.
@@ -162,12 +179,12 @@ SYS = """You turn a bank's collection-call brief into a precise JSON rule sheet.
 - When a rule fits no field, put it in `unmapped_rules`. Nothing may be dropped."""
 
 
-def _ask(prompt, purpose, log):
+def _ask(prompt, purpose, log, schema=None):
     from claude_agent_sdk import ClaudeAgentOptions, ResultMessage, query
 
     async def run():
         o = ClaudeAgentOptions(model=MODEL, tools=[], max_turns=4, setting_sources=[], system_prompt=SYS,
-                               output_format={"type": "json_schema", "schema": SCHEMA})
+                               output_format={"type": "json_schema", "schema": schema or SCHEMA})
         out = None
         async for m in query(prompt=prompt, options=o):
             if isinstance(m, ResultMessage):
@@ -193,7 +210,12 @@ def extract(brief_text, api, log=print):
             log({"event": "model_call_failed", "purpose": purpose, "error": str(e)[:300]})
             return current
     ctx = f"BRIEF:\n<<<\n{brief_text}\n>>>\n\nTOOL API:\n<<<\n{api_spec.compact(api)}\n>>>\n"
-    rules = _ask(ctx + "\nFill the rule sheet from the brief.", "extract the rule sheet from the brief", log)
+    inventory = _ask(ctx + "\nIndependently enumerate EVERY atomic obligation, including conditions, exceptions and memo overrides. "
+                     "Mark replaced requirements superseded. Do not extract a rule sheet yet.",
+                     "independent source requirement inventory", log, INVENTORY_SCHEMA)
+    rules = _ask(ctx + "\nSource inventory:\n" + json.dumps(inventory) +
+                 "\nFill the rule sheet from the brief. Map every inventory ID to concrete paths. "
+                 "Preserve all exceptions to minimum-offer limits in execution. Do not invent intent actions.", "extract the rule sheet from the brief", log)
     for rnd in range(2):
         errs = validate(rules, api)
         if not errs:
@@ -214,13 +236,45 @@ def extract(brief_text, api, log=print):
                      "\n\nReturn the corrected full rule sheet.", "repair rule sheet after audit", rules)
         if len(validate(fixed, api)) < len(errs):
             rules = fixed
+    audit = _ask(ctx + "\nIndependent inventory:\n" + json.dumps(inventory) + "\nCandidate sheet:\n" + json.dumps(rules) +
+                 "\nCompare each inventory item with the actual values at its paths. Return the inventory IDs unchanged, "
+                 "with paths into the sheet and an error for every missing or incorrectly implemented requirement. "
+                 "Do not mark a requirement covered merely because similar words occur somewhere.",
+                 "semantic completeness and value audit", log, AUDIT_SCHEMA)
+    expected = {x["id"] for x in inventory["requirements"]}
+    actual = {x["id"] for x in audit["requirements"]}
+    if expected != actual or audit["errors"]:
+        raise ValueError("Requirement audit failed: " + json.dumps({"missing_ids": sorted(expected - actual), "errors": audit["errors"]}))
+    rules["requirements"] = audit["requirements"]
+    originals = {x["id"]: x for x in inventory["requirements"]}
+    for req in rules["requirements"]:
+        original = originals[req["id"]]
+        if any(req[k] != original[k] for k in ("source", "critical", "status")):
+            raise ValueError(f"Requirement {req['id']} changed during audit")
+        if req["source"] not in brief_text:
+            raise ValueError(f"Requirement {req['id']} has no exact source quote")
+    offer = rules["execution"]["minimum_offer"]
+    if offer["limit"] >= 0 and offer["source"] not in brief_text:
+        raise ValueError("Minimum-offer policy has no exact source quote")
+    for action in rules["execution"]["intent_actions"]:
+        if not action["source"] or action["source"] not in brief_text:
+            raise ValueError(f"Intent action {action['intent']} has no exact source quote")
     return rules
 
 
 # ---------------------------------------------------------------- validation
 
 def validate(r, api):
-    errs = []
+    r = policy.legacy(r)
+    structural = policy.schema_errors(r, SCHEMA)
+    if structural:
+        return structural
+    errs = policy.validate(r)
+    refused_note = r["execution"]["refused_note_reason"]
+    if refused_note and refused_note not in api_spec.enum(api, "add_note", "reason"):
+        errs.append("execution.refused_note_reason is not in the add_note reason enum")
+    if r["requirements"] and r["notes"]["used"] and not refused_note:
+        errs.append("executable refusal-note mapping is required when notes are used")
     outs = api_spec.enum(api, "close_call", "outcome")
     reasons = api_spec.enum(api, "close_call", "reason")
     table = {(o["outcome"], o["reason"]) for o in r["outcomes"]}
@@ -249,8 +303,20 @@ def validate(r, api):
     for p in r["close_precedence"]:
         pair("close_precedence " + p["state"], p["outcome"], p["reason"], allow_empty_reason=True)
     for t in (cb["window_start"], cb["window_end"]):
-        if not re.match(r"^\d{2}:\d{2}$", t):
+        if not re.match(r"^(?:[01]\d|2[0-3]):[0-5]\d$", t):
             errs.append(f"callback window time {t!r} is not HH:MM")
+    if cb["window_start"] > cb["window_end"]:
+        errs.append("callback window start is after end")
+    for name, value in (("identity.max_wrong_total", r["identity"]["max_wrong_total"]), ("opening.max_asks", r["opening"]["max_asks"])):
+        if value <= 0:
+            errs.append(f"{name} must be positive")
+    for name, value in (("callback.business_days_ahead", cb["business_days_ahead"]), ("callback.extra_asks", cb["extra_asks_when_outside"]),
+                        ("confirmation.retries", r["confirmation"]["retries_on_failure"]), ("calendar.earliest", r["calendar"]["earliest_promise_business_days"])):
+        if value < 0:
+            errs.append(f"{name} cannot be negative")
+    weekdays = r["calendar"]["business_weekdays"]
+    if not weekdays or len(set(weekdays)) != len(weekdays) or any(d < 0 or d > 6 for d in weekdays):
+        errs.append("business_weekdays must be unique integers from 0 to 6")
 
     fields = api_spec.enum(api, "verify_identity", "field")
     if not r["identity"]["questions"]:
@@ -266,6 +332,8 @@ def validate(r, api):
             errs.append(f"intent {it['name']}: note reason {it['note_reason']!r} is not in the add_note enum")
     types = (api["tools"].get("get_account", {}).get("response", {}).get("products", {}).get("items", {}).get("properties", {}).get("type", {}).get("enum") or [])
     for p in r["products"]:
+        if not 0 <= p["floor_percent"] <= 100:
+            errs.append(f"product {p['type']}: floor percentage outside 0..100")
         if types and p["type"] not in types:
             errs.append(f"product type {p['type']!r} is not in the get_account enum {types}")
         if not p["floor_field"] and not p["floor_percent"]:
@@ -284,11 +352,22 @@ def validate(r, api):
     for a, b in zip(bands, bands[1:]):
         if b["min_days_late"] != a["max_days_late"] + 1:
             errs.append(f"bands {a['name']} and {b['name']} leave a gap or overlap")
+    for b in bands:
+        if b["min_days_late"] < 0 or b["max_days_late"] < b["min_days_late"] or b["deadline_offset"] < 0 or b["attempts"] < 0:
+            errs.append(f"band {b['name']}: invalid bounds, deadline or attempt count")
     names = {b["name"] for b in bands}
     for at in r["persuasion"]["attempts"]:
+        if at["date_rule"] == "other" or at["amount_rule"] == "other":
+            errs.append(f"attempt {at['number']}: unsupported executable policy 'other'")
+        if at["number"] <= 0 or at["date_param"] < 0 or not 0 <= at["amount_param"] <= 100:
+            errs.append(f"attempt {at['number']}: invalid parameters")
         for b in at["bands"]:
             if b not in names:
                 errs.append(f"attempt {at['number']}: band {b!r} is not a band name {sorted(names)}")
+    for b in bands:
+        attempts = sorted(a["number"] for a in r["persuasion"]["attempts"] if not a["bands"] or b["name"] in a["bands"])
+        if attempts != list(range(1, b["attempts"] + 1)):
+            errs.append(f"band {b['name']}: attempt ladder does not match declared count")
     known = {v["name"] for v in r["call_vars"]["examples"]}
     for tpl in (r["call_vars"]["address_as"], r["call_vars"]["full_name"], r["opening"]["first_sentence"], r["opening"]["confirm_question"]):
         for v in re.findall(r"\{\{(\w+)\}\}", tpl):

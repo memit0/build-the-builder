@@ -102,3 +102,7 @@ So build something that reads a brief, not something that knows this one. Whatev
 - The bank answers `unknown product_id`: the model made an id up. Product ids come from `get_account` (`p1`, `p2`, ...). Give them to the model in the tool result, or fill them in with code.
 - A simulation stays at "running" and no call ever starts: the workflow cannot start a call. Try one chat turn. Leave `agent_config` out of the workflow you send.
 - The agent says nothing after a tool call and the customer hangs up: see "Tool results and the next turn" in `docs/tools-and-code.md`.
+
+## Deterministic policy compiler
+
+The compiler now tracks offers, read-backs, confirmations and recording budgets in explicit runtime state, audits extraction completeness and stops invalid builds before publication. See [policy-compiler.md](docs/policy-compiler.md) for the schema additions, coverage report, offline tests and required live checks.

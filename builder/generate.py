@@ -2,7 +2,7 @@
 setup code -> opening -> security_check -> load_account -> prepare_deal code -> negotiate -> end."""
 import json, re
 
-import api_spec, snippets as SN
+import api_spec, snippets as SN, policy
 
 
 def nobraces(s):
@@ -20,6 +20,7 @@ def orr(o):
 
 def config(r, api):
     """The constant every snippet reads. Only what code needs, never a {{template}}."""
+    r = policy.legacy(r)
     f = lambda *a, **k: api_spec.find_field(api, *a, **k)
     T = api["tools"]
     no_reason = sorted({o["outcome"] for o in r["outcomes"]} - {o["outcome"] for o in r["outcomes"] if o["reason"]})
@@ -41,6 +42,10 @@ def config(r, api):
         "first_ask": r["first_ask"], "multi_first_ask": r["multi_first_ask"],
         "questions": [{k: q[k] for k in ("field", "ask", "kind", "digits")} for q in r["identity"]["questions"]],
         "date_order": r["identity"]["numeric_date_order"],
+        "max_wrong": r["identity"]["max_wrong_total"],
+        "minimum_offer": r["execution"]["minimum_offer"],
+        "intent_actions": r["execution"]["intent_actions"],
+        "readback": r["confirmation"]["readback_question"],
         "hints": {h["value"]: {"instruction": h["instruction"], "wrong": h["counts_as_wrong"]} for h in r["identity"]["hints"]},
         "failed": {k: r["identity"]["failed"][k] for k in ("say", "outcome", "reason")},
         "confirm": {"retries": r["confirmation"]["retries_on_failure"], "success": r["confirmation"]["success_sentence"],
@@ -50,6 +55,7 @@ def config(r, api):
         "notes_on_transfer": r["notes"]["on_transfer"], "notes_single": r["notes"]["single_product"],
         "note_reasons": api_spec.enum(api, "add_note", "reason"),
         "refused_reason": r["persuasion"]["exhausted"]["reason"],
+        "refused_note_reason": r["execution"]["refused_note_reason"] or next((i["note_reason"] for i in r["intents"] if i["close_reason"] == r["persuasion"]["exhausted"]["reason"] and i["note_reason"]), r["persuasion"]["exhausted"]["reason"]),
         "precedence": r["close_precedence"],
         "no_reason_outcomes": no_reason,
         "paths": {k: T[k]["path"] for k in T},
@@ -75,7 +81,7 @@ def code(cfg, keys, *parts):
     js = json.dumps({k: cfg[k] for k in keys}, separators=(",", ":"), ensure_ascii=True)
     while "{{" in js or "}}" in js:
         js = js.replace("{{", "{ {").replace("}}", "} }")
-    return "C = __import__('json').loads(r\'\'\'" + js + "\'\'\')\n" + "".join(parts)
+    return "C = __import__('json').loads(" + repr(js) + ")\n" + "".join(parts)
 
 
 # ---------------------------------------------------------------- tool builders
@@ -106,7 +112,7 @@ def api_tool(api, name, description, cust_var, fields=None, enums=None, pre=None
                          "headers": {"type": "object", "properties": {"Content-Type": {"type": "string", "default": "application/json"}}},
                          "body": {"type": "object", "properties": props, "required": [k for k in t["required"] if k != cust]}}}},
     }
-    if pre: tool["pre_process_code"] = pre
+    tool["pre_process_code"] = (pre or "") + "\nif vars.get('call_closed') == 'yes':\n    config['url'] = ''\n"
     if post: tool["post_process_code"] = post
     if mapping: tool["response_mapping"] = mapping
     return tool
@@ -304,6 +310,11 @@ CLOSE_KEYS = ["fields", "precedence", "queue_close", "note_reasons", "no_reason_
 
 
 def generate(r, api):
+    r = policy.legacy(r)
+    import extract
+    errors = extract.validate(r, api)
+    if errors:
+        raise ValueError("Invalid rule sheet: " + "; ".join(errors))
     cfg = config(r, api)
     P = prompts(r)
     cv = r["call_vars"]["customer_id"]
@@ -328,16 +339,40 @@ def generate(r, api):
 
     verify = api_tool(api, "verify_identity", "Checks one security answer. CALL it every time the customer answers a security question, once per answer.", cv,
                       fields={F["id_answer"]: "The customer's answer in the format the question needs: " + "; ".join(f"{q['field']}: {q['how_to_send']}" for q in r["identity"]["questions"]) + "."},
-                      pre=code(cfg, ["fields", "questions", "date_order"], SN.BASE, SN.VERIFY_PRE), post=code(cfg, ["questions", "hints", "failed"], SN.BASE, SN.VERIFY_POST), mapping=[{"path": "data.all_verified", "variable": "all_verified"}])
+                      pre=code(cfg, ["fields", "questions", "date_order"], SN.BASE, SN.VERIFY_PRE), post=code(cfg, ["questions", "hints", "failed", "max_wrong"], SN.BASE, SN.VERIFY_POST), mapping=[{"path": "data.all_verified", "variable": "all_verified"}])
     callback = api_tool(api, "schedule_callback", "Books a callback for the customer. CALL it as soon as the person who answered names a day and a time when the customer can be reached.", cv,
                         fields={F["cb_date"]: "YYYY-MM-DD.", F["cb_time"]: "HH:MM, 24-hour."}, pre=code(cfg, ["fields", "callback", "paths"], SN.BASE, SN.CB_PRE), post=code(cfg, ["callback"], SN.BASE, SN.CB_POST))
     promise = api_tool(api, "create_promise", f"Records one payment promise for one product. CALL it only after you read back product, amount and date and the customer clearly said yes to \"{r['confirmation']['readback_question']}\". If it fails, follow what_to_do_next.", cv,
                        fields={F["p_pid"]: "The product_id from FACTS, copied exactly (p1, p2, ...).", F["p_amount"]: "The agreed amount as a number, e.g. 637.5.", F["p_date"]: "The agreed date, YYYY-MM-DD."},
                        pre=code(cfg, ["fields", "paths"], H, SN.PROMISE_PRE), post=code(cfg, ["confirm", "promise_outcome"], H, SN.PROMISE_POST))
-    neg_tools = [promise]
+    policy_tool = {
+        "type": "function", "config": {"timeoutMs": 10000, "maxRetries": 0},
+        "function": {"name": "policy_step", "handler": "__function__:code_exec",
+                     "description": "Advance the bank policy state before any offer, read-back, confirmation or intent. Never invent your own proposal. After this tool follow the routed policy instruction. Fill unused arguments with amount 0, date empty, too_much false, intent empty; do not carry arguments from a previous action.",
+                     "parameters": {"type": "object", "properties": {
+                         "code": {"type": "string", "default": code(cfg, ["minimum_offer", "intent_actions", "readback"], H, SN.POLICY_STEP)},
+                         "timeout_ms": {"type": "number", "default": 10000},
+                         "action": {"type": "string", "enum": ["offer", "minimum", "refuse", "stage", "change", "readback", "confirm", "intent"]},
+                         "product_id": {"type": "string", "description": "Exact get_account product id"},
+                         "amount": {"type": "number"}, "date": {"type": "string", "description": "Exact ISO date"},
+                         "too_much": {"type": "boolean"}, "intent": {"type": "string"},
+                     }, "required": ["action", "product_id", "amount", "date", "too_much", "intent"]}},
+    }
+    neg_tools = [policy_tool, promise]
+    P["negotiate"] += """
+
+MANDATORY POLICY STATE PROTOCOL (takes precedence over manual counting above):
+- Before making any numbered persuasion offer call policy_step action offer with the product_id and too_much reflecting what the customer actually said. Speak only the permitted proposal returned by the policy route; never repeat it.
+- A refusal to an issued numbered offer calls policy_step refuse once. A refusal to the initial ask goes straight to offer; do not count it as a refusal of an unissued numbered offer.
+- For a discretionary minimum offer after a too-small customer proposal or 'too much', call policy_step minimum with its agreed allowed date. If a numbered attempt is due, use offer instead. Never verbally offer a minimum outside this protocol.
+- For an agreed customer proposal call policy_step stage. On any changed value call change immediately to invalidate confirmation. For multiple products stage them all before a combined read-back.
+- Call policy_step readback when all agreed proposals are staged and all other products are finished. Read ONLY the computed values and exact question, then wait for the customer's clear yes. Only that yes permits policy_step confirm; it confirms the combined staged set. Never call confirm on a question, silence or a refusal. Then create_promise copies the exact confirmed values.
+- If a supported special intent applies, call policy_step intent BEFORE any other action. Do not use it for an unrelated side question.
+- Neither the code tool nor the bank tools authorize you to assume customer agreement. Follow the actual customer's words.
+"""
     if r["notes"]["used"]:
         note = api_tool(api, "add_note", "Records why one product ended without a promise. CALL it as the bank's note rules say: " + r["notes"]["when"], cv,
-                        fields={F["n_pid"]: "The product_id from FACTS, copied exactly."}, pre=code(cfg, ["fields", "paths", "notes_on_transfer", "notes_single", "refused_reason"], H, SN.NOTE_PRE), post=code(cfg, [], H, SN.NOTE_POST))
+                        fields={F["n_pid"]: "The product_id from FACTS, copied exactly."}, pre=code(cfg, ["fields", "paths", "notes_on_transfer", "notes_single", "refused_reason", "refused_note_reason"], H, SN.NOTE_PRE), post=code(cfg, [], H, SN.NOTE_POST))
         # Not sent to the bank: NOTE_PRE pops it and blocks a refusal note until this reaches the product's allowed attempts.
         note["function"]["parameters"]["properties"]["body"]["properties"]["attempts_made"] = {
             "type": "integer", "default": "{{attempts_made}}",
@@ -352,6 +387,9 @@ def generate(r, api):
                                     "headers": {"type": "object", "properties": {"Content-Type": {"type": "string", "default": "application/json"}}},
                                     "body": {"type": "object", "properties": {api_spec.find_field(api, "get_account", "customer_id", "customer"): {"type": "string", "default": "{{" + cv + "}}"}}, "required": []}}}}}
 
+    get_account["pre_process_code"] = "if vars.get('id_state') != 'verified':\n    config['url'] = ''\n"
+    verify["pre_process_code"] += "\nif vars.get('id_state') in ('failed', 'verified'):\n    config['url'] = ''\n"
+
     fallback = close("close_call_fallback")
     fallback["function"]["description"] = "Records how the call ended, if it was not closed during the call."
     fallback["pre_process_code"] = code(cfg, CLOSE_KEYS + ["paths"], H, SN.CLOSE_PRE, SN.FALLBACK_CLOSE_EXTRA)
@@ -364,7 +402,7 @@ def generate(r, api):
     ok = lambda v, val: {"logic": "or", "conditions": [{"variable": v, "operator": "equals", "operand": val}]}
     nodes = {
         "setup": code_node("setup", setup, "setup_retry", [{"target_node": "opening", "description": "setup done", "condition": ok("setup_state", "done")}]),
-        "setup_retry": code_node("setup_retry", setup, "opening"),
+        "setup_retry": code_node("setup_retry", setup, "account_error", [{"target_node": "opening", "description": "setup done", "condition": ok("setup_state", "done")}]),
         "opening": conv("opening", P["opening_line"], P["opening"], [callback] + transfer(P["before"]) + [close()], [
             CLOSED,
             {"target_node": "security_check", "description": "The person on the line clearly confirmed they are the customer", "is_tool_call": True,
@@ -372,7 +410,7 @@ def generate(r, api):
         ]),
         "security_check": conv("security_check", P["ident_line"], P["identity"], [verify] + transfer(P["before"]) + [close()], [
             {"target_node": "load_account", "description": "Every security answer verified",
-             "condition": {"logic": "or", "conditions": bool_true("all_verified") + bool_true("verify_identity_response.data.all_verified") + [{"variable": "id_state", "operator": "equals", "operand": "verified"}]}},
+             "condition": ok("id_state", "verified")},
             CLOSED,
         ]),
         "load_account": {
@@ -383,12 +421,15 @@ def generate(r, api):
         },
         "prepare_deal": code_node("prepare_deal", account, "prepare_retry", [{"target_node": "negotiate", "description": "account ready", "condition": ok("acct_state", "ok")}]),
         "prepare_retry": code_node("prepare_retry", account, "account_error", [{"target_node": "negotiate", "description": "account ready", "condition": ok("acct_state", "ok")}]),
-        "negotiate": conv("negotiate", P["neg_line"], P["negotiate"], neg_tools + transfer(P["after"]) + [close()], [CLOSED]),
+        "negotiate": conv("negotiate", P["neg_line"], P["negotiate"], neg_tools + transfer(P["after"]) + [close()], [CLOSED, {"target_node": "policy_dispatch", "description": "policy action processed", "condition": ok("policy_pending", "yes")}]),
         "account_error": conv("account_error", "", P["account_error"], [close()], [CLOSED]),
         "end": {"name": "end", "node_type": "end_call", "on_enter": {"type": "silent"}, "disable_inactivity_monitor": True, "transitions": [],
                 "terminal": {"type": "function", "function": {"name": "call_closed", "handler": "__function__:end_call",
                                                                "parameters": {"type": "object", "properties": {"message_mode": {"type": "string", "default": "none"}}}}}},
     }
+    nodes["policy_dispatch"] = code_node("policy_dispatch", "vars['policy_pending'] = 'no'\n", "policy_result")
+    nodes["policy_result"] = conv("policy_result", "", P["negotiate"] + "\nCURRENT POLICY INSTRUCTION:\n{{policy_instruction}}", nodes["negotiate"]["tools"], nodes["negotiate"]["transitions"])
+    nodes["policy_result"]["on_enter_first_entry_only"] = False
     test_vars = {v["name"]: v["example"] for v in r["call_vars"]["examples"]}
     test_vars.setdefault(cv, "c_test")
     return {"initial_node": "setup", "system_prompt": P["system"], "nodes": nodes, "global_nodes": {}, "tools": [fallback], "test_variables": test_vars}

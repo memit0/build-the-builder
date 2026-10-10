@@ -3,7 +3,8 @@ import json
 
 
 def load(path):
-    spec = json.load(open(path))
+    with open(path) as f:
+        spec = json.load(f)
     base = spec["servers"][0]["url"].rstrip("/")
     tools = {}
     for path_, ops in spec["paths"].items():

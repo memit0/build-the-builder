@@ -2,7 +2,7 @@
 prepends; nothing here knows a brief. No double braces anywhere: the platform may template them."""
 
 BASE = r'''
-import datetime, json, re
+import datetime, json, re, math
 def jl(k, dflt):
     try:
         x = vars.get(k)
@@ -26,11 +26,11 @@ def isbd(d):
     return d.weekday() in BW and d.isoformat() not in HOL
 def nextbd(d):
     d = d + datetime.timedelta(days=1)
-    for i in range(30):
+    for i in range(len(HOL) + 8):
         if isbd(d):
-            break
+            return d
         d = d + datetime.timedelta(days=1)
-    return d
+    raise ValueError("no business day found")
 def addbd(d, n):
     for i in range(int(n)):
         d = nextbd(d)
@@ -38,12 +38,7 @@ def addbd(d, n):
 def say(d):
     return DAYS[d.weekday()] + ' ' + str(d.day) + ' ' + d.strftime('%B') + ' ' + str(d.year) + ' (' + d.isoformat() + ')'
 def get_now():
-    for v in (vars.get(C['now_var']), C['now_example']):
-        try:
-            return datetime.datetime.fromisoformat(str(v or '').strip().replace('Z', '')[:16])
-        except Exception:
-            pass
-    return datetime.datetime.now()
+    return datetime.datetime.fromisoformat(str(vars.get(C['now_var']) or '').strip().replace('Z', '+00:00'))
 '''
 
 SETUP = r'''
@@ -68,8 +63,15 @@ try:
     vars['callback_facts'] = ('Current date and time: ' + say(today) + ', ' + hm + '. A callback can be booked only for: ' + '; or '.join(parts) +
         ' (both times included). "Tomorrow" means ' + say(today + datetime.timedelta(days=1)) + '.')
     vars['setup_state'] = 'done'
+    vars.setdefault('id_state', 'pending')
+    vars.setdefault('x_wrong', 0)
+    vars.setdefault('x_policy', '{}')
+    vars.setdefault('x_confirmed', '{}')
+    vars.setdefault('policy_pending', 'no')
 except Exception as e:
     vars['setup_state'] = 'error'
+    vars['setup_error'] = str(e)[:200]
+    vars['callback_facts'] = 'Call time unavailable. Do not book callbacks or promise dates.'
 '''
 
 ACCOUNT = r'''
@@ -99,7 +101,7 @@ def band_for(dl):
     for b in bs:
         if b['min'] <= dl <= b['max']:
             return b
-    return bs[-1] if dl > bs[-1]['max'] else bs[0]
+    raise ValueError('days_late outside supported bands')
 def last_bd_of_week(start):
     first = start - datetime.timedelta(days=(start.weekday() + 1) % 7 if C['week_starts'] == 'sunday' else start.weekday())
     x = first + datetime.timedelta(days=6)
@@ -142,12 +144,12 @@ try:
     lines = []
     for i, pr in enumerate(prods):
         typ = str(pr.get('type') or '')
-        spec = PT.get(typ) or dict(spoken=typ.replace('_', ' '), floor_field='', floor_percent=0)
-        full = num(pr.get('past_due'))
-        dl = int(num(pr.get('days_late')))
-        floor = num(pr.get(spec['floor_field'])) if spec['floor_field'] else round(full * float(spec['floor_percent'] or 0) / 100.0, 2)
-        if floor <= 0 or floor > full:
-            floor = full
+        spec = PT[typ]
+        full = float(pr['past_due'])
+        dl = int(pr['days_late'])
+        floor = float(pr[spec['floor_field']]) if spec['floor_field'] else round(full * float(spec['floor_percent']) / 100.0, 2)
+        if not math.isfinite(full) or not math.isfinite(floor) or full <= 0 or floor <= 0 or floor > full:
+            raise ValueError('invalid account amount or floor')
         band = band_for(dl)
         deadline = addbd(today, band['offset']) if band['unit'] == 'business_days' else today + datetime.timedelta(days=int(band['offset']))
         if band['unit'] != 'business_days' and not isbd(deadline):
@@ -158,7 +160,9 @@ try:
             phrase = spec['spoken'].format_map(f).strip()
         except Exception:
             phrase = typ.replace('_', ' ')
-        pid = str(pr.get('product_id') or ('p' + str(i + 1)))
+        pid = str(pr['product_id'])
+        if not pid or pid in [x['pid'] for x in out]:
+            raise ValueError('missing or duplicate product id')
         valid = []
         x = earliest
         while x <= deadline:
@@ -175,6 +179,7 @@ try:
         facts.append('  Band: ' + band['name'] + '. DEADLINE (latest date you may record for this product): ' + say(deadline) + '.')
         facts.append('  Persuasion attempts allowed for this product: ' + str(len(atts)) + '.')
         alines = []
+        options = []
         for j, a in enumerate(atts):
             ad = attempt_date(a['date_rule'], a['date_param'], today, deadline)
             on = (' on ' + say(ad)) if ad else ''
@@ -191,6 +196,7 @@ try:
                 am = 'as the rule says'
             alines.append('Attempt ' + str(j + 1) + ' = propose ' + am + ('' if r == 'full_or_floor_if_too_much' else on) + '.')
             facts.append('  ' + alines[-1] + ' (' + a['text'] + ')')
+            options.append(dict(number=a['number'], date=ad.isoformat() if ad else '', amount_rule=r, amount=max(floor, round(full * float(a['amount_param']) / 100.0, 2)) if r == 'percent_of_full' else floor if r == 'floor' else full))
         if not atts:
             facts.append('  There is NO persuasion attempt for this product. After a flat refusal, stop.')
         tpl = C['debt_per_product'] or '{product}: {past_due}, {days_late} days late.'
@@ -200,7 +206,7 @@ try:
             lines.append(tpl.format_map(f2).strip())
         except Exception:
             lines.append(phrase + ': ' + money(full) + ', ' + str(dl) + ' days late.')
-        out.append(dict(pid=pid, phrase=phrase, full=round(full, 2), floor=round(floor, 2), valid=valid, deadline=deadline.isoformat(), deadline_say=say(deadline), atts=alines))
+        out.append(dict(pid=pid, phrase=phrase, full=round(full, 2), floor=round(floor, 2), valid=valid, deadline=deadline.isoformat(), deadline_say=say(deadline), atts=alines, options=options))
     maxd = max(datetime.date.fromisoformat(o['deadline']) for o in out)
     rows = []
     x = today
@@ -259,7 +265,11 @@ try:
         f = str(b.get(F['id_field']) or '')
         a = str(b.get(F['id_answer']) or '').strip()
         V['x_id_field'] = f
-        q = dict((x['field'], x) for x in C['questions']).get(f) or dict(kind='text', digits=0)
+        V['id_block'] = ''
+        remaining = [q for q in C['questions'] if q['field'] not in str(V.get('x_idok') or '').split(',')]
+        if V.get('id_state') in ('failed', 'verified') or not remaining or f != remaining[0]['field']:
+            raise ValueError('answer must be for the current security question')
+        q = remaining[0]
         kind = q['kind']
         low = a.lower()
         out = ''
@@ -301,8 +311,9 @@ try:
                     out = '%s-%02d-%02d' % (yy, mm, dd2)
         if out:
             b[F['id_answer']] = out
-except Exception:
-    pass
+except Exception as e:
+    vars['id_block'] = str(e)[:120]
+    config['url'] = ''
 '''
 
 VERIFY_POST = r'''
@@ -317,12 +328,23 @@ try:
             okf = [x for x in str(V.get('x_idok') or '').split(',') if x]
             left = d.get('wrong_answers_left')
             hint = d.get('hint')
-            if d.get('verified') is True and f and f not in okf:
+            if not V.get('id_block') and d.get('verified') is True and f and f not in okf:
                 okf.append(f)
                 V['x_idok'] = ','.join(okf)
             todo = [q for q in Q if q['field'] not in okf]
             H = C['hints']
-            if d.get('all_verified') is True or (d.get('verified') is True and not todo):
+            wrong = not V.get('id_block') and d.get('verified') is False and (not hint or (H.get(str(hint)) or dict()).get('wrong') is True)
+            if wrong:
+                V['x_wrong'] = int(V.get('x_wrong') or 0) + 1
+            if V.get('id_state') == 'failed' or int(V.get('x_wrong') or 0) >= C['max_wrong']:
+                V['id_state'] = 'failed'
+                d['all_verified'] = False
+                d['what_to_do_next'] = 'Identity failed. No more questions or account access. ' + C['failed']['say']
+            elif V.get('id_block'):
+                d['verified'] = False
+                d['all_verified'] = False
+                d['what_to_do_next'] = 'Verification call blocked: ' + V['id_block'] + '. Resume the current security question; do not access the account.'
+            elif not todo and d.get('verified') is True:
                 V['id_state'] = 'verified'
                 d['all_verified'] = True
                 d['what_to_do_next'] = 'All answers are correct. The customer is verified.'
@@ -359,19 +381,20 @@ try:
                 hh += 12
             b[F['cb_time']] = '%02d:%02d' % (hh, mm)
         tm = str(b.get(F['cb_time']) or '')
-        dt = str(b.get(F['cb_date']) or '')[:10]
+        dt = str(b.get(F['cb_date']) or '')
         b[F['cb_date']] = dt
         days = [x for x in str(V.get('cb_days') or '').split(',') if x]
-        ok = bool(re.match(r'^\d{2}:\d{2}$', tm)) and cb['start'] <= tm <= cb['end']
-        if days and dt not in days:
+        ok = bool(re.match(r'^(?:[01]\d|2[0-3]):[0-5]\d$', tm)) and cb['start'] <= tm <= cb['end'] and V.get('setup_state') == 'done'
+        if dt not in days:
             ok = False
         if dt == str(V.get('cb_today') or '') and tm <= str(V.get('now_hm') or ''):
             ok = False
         V['cb_block'] = '' if ok else 'yes'
         if not ok:
-            config['url'] = config.get('url', '').replace(C['paths']['schedule_callback'], '/callback_outside_window')
+            config['url'] = ''
 except Exception:
-    pass
+    vars['cb_block'] = 'yes'
+    config['url'] = ''
 '''
 
 CB_POST = r'''
@@ -414,18 +437,8 @@ def resolve(pid):
     P = prods()
     ids = [p['pid'] for p in P]
     s = str(pid or '').strip()
-    if s in ids or not P:
-        return s
-    if len(P) == 1:
-        return ids[0]
-    dg = re.sub(r'\D', '', s)
-    for p in P:
-        if dg and re.sub(r'\D', '', p['pid']) == dg:
-            return p['pid']
-    for p in P:
-        if s and (s.lower() in p['phrase'].lower() or p['phrase'].lower() in s.lower()):
-            return p['pid']
     return s
+
 def lst(k):
     return [x for x in str(vars.get(k) or '').split(',') if x]
 '''
@@ -442,27 +455,42 @@ try:
         V['x_last_pid'] = pid
         P = dict((p['pid'], p) for p in prods())
         p = P.get(pid)
-        if pid in lst('x_recorded'):
+        if V.get('id_state') != 'verified':
+            bad = 'identity is not verified'
+        elif V.get('acct_state') != 'ok' or not p:
+            bad = 'account or product is unavailable'
+        elif pid in lst('x_pfailed'):
+            bad = 'recording retries are exhausted for this product'
+        elif pid in lst('x_recorded'):
             bad = 'a promise for this product is already recorded'
         elif P and not p:
             bad = 'unknown product_id ' + pid + '; use one of ' + ', '.join(P)
         elif p:
-            d = str(b.get(F['p_date']) or '')[:10]
+            d = str(b.get(F['p_date']) or '')
             b[F['p_date']] = d
             if d not in p['valid']:
                 bad = 'the date ' + d + ' is not allowed for ' + p['phrase'] + ' (weekend, holiday, past, or after its deadline ' + p['deadline'] + ')'
             try:
-                a = round(num(b.get(F['p_amount'])), 2)
+                a = round(float(str(b.get(F['p_amount'])).replace(',', '')), 2)
                 b[F['p_amount']] = a
-                if a < p['floor'] - 0.005 or a > p['full'] + 0.005:
+                if not math.isfinite(a) or a < p['floor'] or a > p['full']:
                     bad = bad or ('the amount ' + str(a) + ' is outside ' + str(p['floor']) + ' to ' + str(p['full']) + ' for ' + p['phrase'])
             except Exception:
-                pass
+                bad = bad or 'amount is not a finite number'
+            agreed = jl('x_confirmed', dict()).get(pid)
+            if not agreed or agreed != dict(amount=b.get(F['p_amount']), date=b.get(F['p_date'])):
+                bad = bad or 'these exact values have not been confirmed'
+            ps = jl('x_policy', dict()).get(pid) or dict()
+            if ps.get('forbid_promise'):
+                bad = bad or 'the product intent prohibits a promise'
+    else:
+        bad = 'missing promise body'
     V['promise_block'] = bad
     if bad:
-        config['url'] = config.get('url', '').replace(C['paths']['create_promise'], '/promise_not_allowed')
-except Exception:
-    pass
+        config['url'] = ''
+except Exception as e:
+    vars['promise_block'] = 'promise validation failed: ' + str(e)[:120]
+    config['url'] = ''
 '''
 
 PROMISE_POST = r'''
@@ -524,11 +552,14 @@ try:
         b[F['n_pid']] = pid
         V['x_note_pid'] = pid
         V['x_note_reason'] = str(b.get(F['n_reason']) or '')
-        made = int(num(b.pop('attempts_made', 0)))
+        b.pop('attempts_made', None)
         p = dict((x['pid'], x) for x in prods()).get(pid) or dict()
         need = p.get('atts') or []
-        gates = jl('x_note_gate', dict())
-        if len(prods()) == 1 and not C['notes_single']:
+        state = jl('x_policy', dict()).get(pid) or dict()
+        made = int(state.get('refused', 0))
+        if not p or V.get('id_state') != 'verified':
+            bad = 'verified identity and known product required'
+        elif len(prods()) == 1 and not C['notes_single']:
             bad = 'no notes are added when the customer has only one product'
         elif V.get('x_transfer') and not C['notes_on_transfer']:
             bad = 'no notes are added on a transferred call'
@@ -536,17 +567,15 @@ try:
             bad = 'this product has a recorded promise and needs no note'
         elif pid in [n[0] for n in jl('x_notes', [])]:
             bad = 'this product already has a note'
-        # ponytail: trusts the model's own count (hooks can't see the transcript); a wrong or missing count is bounced at most len(need) times, then let through
-        elif V['x_note_reason'] == C['refused_reason'] and made < len(need) and int(gates.get(pid, 0)) < len(need):
-            gates[pid] = int(gates.get(pid, 0)) + 1
-            V['x_note_gate'] = json.dumps(gates)
+        elif V['x_note_reason'] == C['refused_note_reason'] and made < len(need):
             bad = ('a refusal note needs every persuasion attempt for ' + p['phrase'] + ' first (' + str(len(need)) + ' allowed, ' + str(made) + ' made; the first ask does not count). Make the next one now: '
-                   + need[min(made, len(need) - 1)] + ' Call add_note with ' + C['refused_reason'] + ' only after the last attempt is refused')
+                   + need[min(made, len(need) - 1)] + ' Call add_note with ' + C['refused_note_reason'] + ' only after the last attempt is refused')
     V['note_block'] = bad
     if bad:
-        config['url'] = config.get('url', '').replace(C['paths']['add_note'], '/note_not_allowed')
-except Exception:
-    pass
+        config['url'] = ''
+except Exception as e:
+    vars['note_block'] = 'note validation failed: ' + str(e)[:120]
+    config['url'] = ''
 '''
 
 NOTE_POST = r'''
@@ -670,7 +699,126 @@ FALLBACK_CLOSE_EXTRA = r'''
 try:
     done = str(vars.get('call_closed') or '') == 'yes' or str(vars.get('close_call_response.data.ok') or '').lower() == 'true' or str(vars.get('close_ok') or '').lower() == 'true'
     if done:
-        config['url'] = config.get('url', '').replace(C['paths']['close_call'], '/already_closed')
+        config['url'] = ''
 except Exception:
     pass
+'''
+
+# code_exec arguments are read through the platform's documented tool_args namespace.
+# This tool performs no network calls. Dialogue classification is still probabilistic.
+POLICY_STEP = r'''
+try:
+    args = dict((k, vars.get('policy_step_args.' + k)) for k in ('action', 'product_id', 'amount', 'date', 'too_much', 'intent'))
+    action = args['action']
+    pid = str(args['product_id'] or '')
+    products = dict((p['pid'], p) for p in prods())
+    p = products.get(pid)
+    if vars.get('id_state') != 'verified' or vars.get('acct_state') != 'ok' or not p:
+        raise ValueError('verified identity and known account product required')
+    states = jl('x_policy', dict())
+    st = states.setdefault(pid, dict(issued=0, refused=0, minimum_count=0, pending=False))
+    confirmed = jl('x_confirmed', dict())
+    instruction = ''
+    if action == 'offer':
+        if st.get('stop_negotiation') or pid in lst('x_recorded'):
+            raise ValueError('negotiation is stopped for this product')
+        if st['pending']:
+            raise ValueError('an offer is already awaiting an answer; do not repeat it')
+        options = p['options']
+        i = st['issued']
+        if i >= len(options):
+            raise ValueError('all persuasion attempts are exhausted; make no further offer')
+        option = options[i]
+        if option['date'] not in p['valid']:
+            raise ValueError('no permitted date for this attempt')
+        amount = option['amount']
+        if option['amount_rule'] == 'full_or_floor_if_too_much' and str(args['too_much']).lower() == 'true':
+            amount = p['floor']
+        if amount == p['floor'] and p['floor'] < p['full']:
+            rule = C['minimum_offer']
+            exception = option['number'] in rule['repeat_on_attempts']
+            count = int(vars.get('minimum_count') or 0) if rule['scope'] == 'per_call' else st['minimum_count']
+            if rule['limit'] >= 0 and count >= rule['limit'] and not exception:
+                raise ValueError('minimum offer limit reached; do not repeat the offer')
+            st['minimum_count'] += 1
+            vars['minimum_count'] = int(vars.get('minimum_count') or 0) + 1
+        st['issued'] += 1
+        st['pending'] = True
+        instruction = 'Make ONLY this proposal, once: ' + p['phrase'] + ', amount ' + money(amount) + ', on ' + option['date'] + '. ' + p['atts'][i]
+    elif action == 'refuse':
+        if not st['pending']:
+            raise ValueError('no issued persuasion attempt to refuse')
+        st['refused'] += 1
+        st['pending'] = False
+        instruction = 'Refusal recorded. Call policy_step offer for the next permitted attempt, or finish this product if exhausted.'
+    elif action == 'minimum':
+        if st.get('stop_negotiation') or st['pending'] or pid in lst('x_recorded'):
+            raise ValueError('minimum offer is unavailable in the current state')
+        rule = C['minimum_offer']
+        count = int(vars.get('minimum_count') or 0) if rule['scope'] == 'per_call' else st['minimum_count']
+        if rule['limit'] < 0:
+            raise ValueError('no executable discretionary minimum-offer policy; re-extract the brief')
+        if count >= rule['limit']:
+            raise ValueError('minimum offer limit reached')
+        date = str(args['date'] or '')
+        if date not in p['valid']:
+            raise ValueError('minimum offer date is not allowed')
+        st['minimum_count'] += 1
+        vars['minimum_count'] = int(vars.get('minimum_count') or 0) + 1
+        instruction = 'Offer the minimum, ONCE: ' + p['phrase'] + ', ' + money(p['floor']) + ', on ' + date + '. Follow the bank instructions about the remaining overdue balance. Do not repeat this offer.'
+    elif action == 'intent':
+        rule = next((x for x in C['intent_actions'] if x['intent'] == args['intent']), None)
+        if not rule:
+            raise ValueError('intent has no supported executable action; follow its prompt instructions')
+        st.update(stop_negotiation=rule['stop_negotiation'], forbid_promise=rule['forbid_promise'], allow_customer_proposal=rule['allow_customer_proposal'])
+        st['pending'] = False
+        confirmed = dict((k, v) for k, v in confirmed.items() if k in lst('x_recorded'))
+        vars['x_readback'] = '{}'
+        st.pop('staged', None)
+        instruction = 'Intent state updated. Follow the bank intent instructions; do not negotiate if stopped.'
+    elif action in ('stage', 'change'):
+        vars['x_readback'] = '{}'
+        confirmed = dict((k, v) for k, v in confirmed.items() if k in lst('x_recorded'))
+        st.pop('staged', None)
+        amount = round(float(str(args['amount']).replace(',', '')), 2)
+        date = str(args['date'] or '')
+        if st.get('forbid_promise') or (st.get('stop_negotiation') and not st.get('allow_customer_proposal')) or pid in lst('x_recorded'):
+            raise ValueError('a promise is prohibited for this product')
+        if not math.isfinite(amount) or not p['floor'] <= amount <= p['full']:
+            raise ValueError('amount outside the permitted range')
+        if date not in p['valid']:
+            wanted = datetime.date.fromisoformat(date)
+            valid = [datetime.date.fromisoformat(x) for x in p['valid']]
+            if not valid:
+                raise ValueError('no valid promise date')
+            corrected = next((x for x in valid if x >= wanted), valid[-1])
+            instruction = 'Requested date is not permitted. Offer ' + corrected.isoformat() + ' and wait for agreement; then stage again. Do not claim it is confirmed.'
+        else:
+            st['staged'] = dict(amount=amount, date=date)
+            st['pending'] = False
+            instruction = 'Proposal staged, NOT confirmed. Finish other products if any; then call policy_step readback for the combined proposals.'
+    elif action == 'readback':
+        staged = dict((k, v['staged']) for k, v in states.items() if v.get('staged') and k not in lst('x_recorded'))
+        if not staged:
+            raise ValueError('no staged values to read back')
+        vars['x_readback'] = json.dumps(staged)
+        instruction = 'Read back these exact proposals together: ' + '; '.join(products[k]['phrase'] + ', ' + money(v['amount']) + ', ' + v['date'] for k, v in staged.items()) + '. Ask exactly: ' + C['readback'] + ' Wait for a clear yes before policy_step confirm.'
+    elif action == 'confirm':
+        staged = dict((k, v['staged']) for k, v in states.items() if v.get('staged') and k not in lst('x_recorded'))
+        if not staged or jl('x_readback', dict()) != staged:
+            raise ValueError('a read-back of the current exact values is required')
+        confirmed.update(staged)
+        instruction = 'Confirmed exact values: ' + json.dumps(staged) + '. Call create_promise once per product with only these values.'
+    else:
+        raise ValueError('unknown policy action')
+    vars['x_policy'] = json.dumps(states)
+    vars['x_confirmed'] = json.dumps(confirmed)
+    vars['policy_instruction'] = instruction
+except Exception as e:
+    if 'confirmed' in locals():
+        vars['x_confirmed'] = json.dumps(confirmed)
+    if 'states' in locals():
+        vars['x_policy'] = json.dumps(states)
+    vars['policy_instruction'] = 'Action blocked: ' + str(e)[:250] + '. Do not invent or repeat an offer. Follow the bank rules for the current state.'
+vars['policy_pending'] = 'yes'
 '''

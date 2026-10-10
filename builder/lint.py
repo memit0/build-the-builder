@@ -51,6 +51,18 @@ def lint(wf, rules, api):
             errs.append(f"conversation node {k} has no route to end_call")
     if not any(n["node_type"] == "end_call" for n in nodes.values()):
         errs.append("no end_call node")
+    ending = {k for k, n in nodes.items() if n["node_type"] == "end_call"}
+    changed = True
+    while changed:
+        previous = set(ending)
+        ending.update(k for k, targets in edges.items() if any(t in ending for t in targets))
+        changed = previous != ending
+    for k in seen - ending:
+        errs.append(f"node {k} has no path to end_call")
+    security = nodes.get("security_check", {})
+    account_routes = [t for t in security.get("transitions", []) if t["target_node"] == "load_account"]
+    if not account_routes or any("id_state" not in json.dumps(t["condition"]) for t in account_routes):
+        errs.append("account access must route only on guarded identity state")
 
     # tools: fields and enums match the API
     for k, n in nodes.items():
@@ -95,4 +107,4 @@ def lint(wf, rules, api):
 
 
 # variables the generated code always sets (plus call variables from test_variables)
-SET_VARS = {"callback_facts", "deal_facts", "date_table", "debt_text", "first_ask_text"}
+SET_VARS = {"callback_facts", "deal_facts", "date_table", "debt_text", "first_ask_text", "policy_instruction"}

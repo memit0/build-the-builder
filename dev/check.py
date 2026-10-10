@@ -50,6 +50,10 @@ def selftest(wf, r, api):
         exec(src(N["setup"]), {"vars": V})
         if V.get("setup_state") != "done":
             errs.append("setup code failed")
+        verify = N["security_check"]["tools"][0]
+        for q in r["identity"]["questions"]:
+            V["x_id_field"] = q["field"]
+            exec(verify["post_process_code"], {"vars": V, "result": {"data": {"verified": True}}})
         V["products"] = json.dumps(prods)
         exec(src(N["prepare_deal"]), {"vars": V})
         if V.get("acct_state") != "ok":
@@ -63,6 +67,14 @@ def selftest(wf, r, api):
         F = generate.config(r, api)["fields"]
         cfg = {"url": "https://x" + api["tools"]["create_promise"]["path"],
                "body": {F["p_pid"]: P[0]["pid"], F["p_amount"]: P[0]["full"], F["p_date"]: P[0]["valid"][-1] if P[0]["valid"] else ""}}
+        step = tools["policy_step"]["function"]["parameters"]["properties"]["code"]["default"]
+        def policy_step(action, pid, **kwargs):
+            for key in ("action", "product_id", "amount", "date", "too_much", "intent"):
+                V["policy_step_args." + key] = dict(action=action, product_id=pid, **kwargs).get(key)
+            exec(step, {"vars": V})
+        policy_step("stage", P[0]["pid"], amount=P[0]["full"], date=cfg["body"][F["p_date"]])
+        policy_step("readback", P[0]["pid"])
+        policy_step("confirm", P[0]["pid"])
         exec(tools["create_promise"]["pre_process_code"], {"vars": V, "config": cfg})
         if V.get("promise_block"):
             errs.append(f"a valid promise was blocked for band {band['name']}: {V['promise_block']}")
@@ -76,6 +88,9 @@ def selftest(wf, r, api):
             note(0)
             if not V.get("note_block"):
                 errs.append(f"a refusal note with 0 attempts made was not blocked for band {band['name']}")
+            for _ in P[1]["atts"]:
+                policy_step("offer", P[1]["pid"], too_much=False)
+                policy_step("refuse", P[1]["pid"])
             note(len(P[1]["atts"]))
             if V.get("note_block"):
                 errs.append(f"a refusal note after every attempt was blocked for band {band['name']}: {V['note_block']}")

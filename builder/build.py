@@ -16,7 +16,7 @@ except ImportError:  # system python has no SDK: re-run inside the kit's venv
     if venv.exists() and pathlib.Path(sys.executable).resolve() != venv.resolve():
         os.execv(str(venv), [str(venv)] + sys.argv)
 sys.path[:0] = [str(ROOT / "builder"), str(ROOT)]
-import api_spec, extract, generate, lint  # noqa: E402
+import api_spec, extract, generate, lint, policy  # noqa: E402
 import freya  # noqa: E402
 
 
@@ -25,6 +25,9 @@ class Trace:
         (ROOT / "traces").mkdir(exist_ok=True)
         self.path = ROOT / "traces" / f"{slot}-{time.strftime('%Y%m%d-%H%M%S')}.jsonl"
         self.f = self.path.open("w")
+
+    def close(self):
+        self.f.close()
 
     def __call__(self, e):
         e = {"at": time.strftime("%Y-%m-%dT%H:%M:%S%z"), **e}
@@ -61,7 +64,10 @@ def main():
     ap.add_argument("files", nargs="+", help="brief file(s), then the tool API json")
     ap.add_argument("--slot"); ap.add_argument("--rules", help="reuse a rule sheet instead of extracting")
     ap.add_argument("--no-save", action="store_true"); ap.add_argument("--test", help="practice brief letter for run_cases.py (A or B)")
+    ap.add_argument("--reps", type=int, default=3, help="simulation repetitions; every run must pass")
     a = ap.parse_args()
+    if a.reps < 1:
+        ap.error("--reps must be positive")
     briefs = [f for f in a.files if not f.endswith(".json")]
     tool_api = next(f for f in a.files if f.endswith(".json"))
     slot = a.slot or "-".join(pathlib.Path(b).stem for b in briefs)
@@ -69,42 +75,76 @@ def main():
     t0 = time.time()
     log({"event": "start", "briefs": briefs, "tool_api": tool_api, "slot": slot, "builder_model": extract.MODEL})
 
-    api = api_spec.load(tool_api)
-    out = ROOT / "out"; out.mkdir(exist_ok=True)
-    if a.rules:
-        rules = json.load(open(a.rules))
-        log({"event": "rules_reused", "path": a.rules})
-    else:
-        text = "\n\n".join(pathlib.Path(b).read_text() for b in briefs)
-        rules = extract.extract(text, api, log=log)
-    (out / f"{slot}.rules.json").write_text(json.dumps(rules, indent=1))
-    errs = extract.validate(rules, api)
-    log({"event": "rules", "path": str(out / f"{slot}.rules.json"), "validation_errors": errs})
+    status = "failed"
+    try:
+        api = api_spec.load(tool_api)
+        out = ROOT / "out"; out.mkdir(exist_ok=True)
+        if a.rules:
+            rules = json.loads(pathlib.Path(a.rules).read_text())
+            log({"event": "rules_reused", "path": a.rules})
+        else:
+            text = "\n\n".join(pathlib.Path(b).read_text() for b in briefs)
+            rules = extract.extract(text, api, log=log)
+        rules = policy.legacy(rules)
+        (out / f"{slot}.rules.json").write_text(json.dumps(rules, indent=1))
+        errs = extract.validate(rules, api)
+        log({"event": "rules", "path": str(out / f"{slot}.rules.json"), "validation_errors": errs})
 
-    wf = generate.generate(rules, api)
-    (out / f"{slot}.generated.json").write_text(json.dumps(wf, indent=1))
-    problems = lint.lint(wf, rules, api)
-    log({"event": "lint", "problems": problems})
+        if errs:
+            log({"event": "build_failed", "stage": "rules", "errors": errs})
+            raise ValueError("Rule validation failed; workflow was not saved")
 
-    if not a.no_save:
-        try:
-            freya.validate_workflow(slot, wf)
-            log({"event": "platform_dry_run", "ok": True})
-        except Exception as e:
-            log({"event": "platform_dry_run", "ok": False, "error": str(e)[:1500]})
-        ids = freya.save_workflow(slot, wf, state_file=str(ROOT / ".freya-agents.json"))
-        log({"event": "saved_on_freya", **ids})
-        smoke(ids["workflow_id"], wf["test_variables"], log)
-        path = freya.export_workflow(ids["workflow_id"], str(out / f"{slot}.workflow.json"))
-        log({"event": "exported", "path": path})
-        if a.test:
-            cmd = [sys.executable, str(ROOT / "tools" / "run_cases.py"), ids["agent_id"], "--brief", a.test, "--out", str(ROOT / "results" / f"{slot}.json")]
-            log({"event": "test_start", "cmd": " ".join(cmd)})
-            r = subprocess.run(cmd, capture_output=True, text=True)
-            log({"event": "test_result", "stdout_tail": r.stdout[-3000:], "returncode": r.returncode})
-    log({"event": "end", "seconds": round(time.time() - t0)})
+        wf = generate.generate(rules, api)
+        (out / f"{slot}.generated.json").write_text(json.dumps(wf, indent=1))
+        problems = lint.lint(wf, rules, api)
+        log({"event": "lint", "problems": problems})
+
+        report = policy.coverage(rules, wf)
+        report_path = out / f"{slot}.coverage.json"
+        report_path.write_text(json.dumps(report, indent=2))
+        log({"event": "coverage", "path": str(report_path), "warnings": report["warnings"],
+             "weak_critical": [r["id"] for r in report["requirements"] if r["critical"] and r["coverage"] == "weak"]})
+        if problems:
+            log({"event": "build_failed", "stage": "lint", "errors": problems})
+            raise ValueError("Workflow lint failed; workflow was not saved")
+
+        if not a.no_save:
+            try:
+                validation = freya.validate_workflow(slot, wf)
+                if isinstance(validation, dict) and (validation.get("success") is False or validation.get("valid") is False or validation.get("errors")):
+                    raise ValueError("Platform rejected workflow: " + json.dumps(validation))
+                log({"event": "platform_dry_run", "ok": True})
+            except Exception as e:
+                log({"event": "platform_dry_run", "ok": False, "error": str(e)[:1500]})
+                raise RuntimeError("Platform validation failed; workflow was not saved") from e
+            ids = freya.save_workflow(slot, wf, state_file=str(ROOT / ".freya-agents.json"))
+            log({"event": "saved_on_freya", **ids})
+            smoke_result = smoke(ids["workflow_id"], wf["test_variables"], log)
+            path = freya.export_workflow(ids["workflow_id"], str(out / f"{slot}.workflow.json"))
+            log({"event": "exported", "path": path})
+            if not all(t["ok"] for t in smoke_result):
+                raise RuntimeError("Published workflow failed smoke; exported for diagnosis, not marked successful")
+            if a.test:
+                cmd = [sys.executable, str(ROOT / "tools" / "run_cases.py"), ids["agent_id"], "--brief", a.test, "--reps", str(a.reps), "--out", str(ROOT / "results" / f"{slot}.json")]
+                log({"event": "test_start", "cmd": " ".join(cmd)})
+                r = subprocess.run(cmd, capture_output=True, text=True)
+                log({"event": "test_result", "stdout_tail": r.stdout[-3000:], "returncode": r.returncode})
+                if r.returncode:
+                    raise RuntimeError("Behavioral regression failed; inspect the saved test result")
+        status = "success"
+    except Exception as e:
+        log({"event": "build_failed", "error": str(e)[:1500]})
+        raise
+    finally:
+        log({"event": "end", "status": status, "seconds": round(time.time() - t0)})
+        if hasattr(log, "close"):
+            log.close()
     print("trace:", log.path)
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        print("Build failed: " + str(e), file=sys.stderr)
+        sys.exit(1)
