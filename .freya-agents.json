@@ -12,5 +12,9 @@
   "workflow_id": "13ee2ae2-de52-4ffb-961f-67bec32078dc",
   "agent_id": "7ada9804-a8ca-4082-a4fa-c14235f9b5f7",
   "version": 10
+ },
+ "final": {
+  "workflow_id": "b281ef90-0840-4700-86e7-15ccf2289e12",
+  "agent_id": "28b93af1-c45b-43b7-9670-cbd640c91bd7"
  }
 }
