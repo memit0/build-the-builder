@@ -1,0 +1,10 @@
+{
+  "team": "memit0",
+  "members": [{ "name": "Mehmet Battal", "email": "mebattll@gmail.com" }],
+  "repo": "https://github.com/memit0/build-the-builder",
+  "commit": "689adda7427c068f8596053358974de336066839",
+  "run_command": "source env.sh && python3 builder/build.py {case_folder} https://freya-bank-mock.memit0.workers.dev/voice/v1 --slot final",
+  "workflow": "submission/final.workflow.json",
+  "trace": "traces/final.jsonl",
+  "mock_url": "https://freya-bank-mock.memit0.workers.dev"
+}
