@@ -74,9 +74,10 @@ def lint(wf, rules, api):
     # every outcome/reason pair can be sent by close_call
     close_tools = [t for n in nodes.values() for t in n.get("tools", []) if t["function"]["name"] == "close_call"]
     F = api_spec.find_field(api, "close_call", "outcome"), api_spec.find_field(api, "close_call", "reason")
+    body = lambda t: t["function"]["parameters"]["properties"]["body"]["properties"]
     for o in rules["outcomes"]:
-        ok = any(o["outcome"] in t["function"]["parameters"]["properties"]["body"]["properties"][F[0]].get("enum", [o["outcome"]]) and
-                 (not o["reason"] or o["reason"] in t["function"]["parameters"]["properties"]["body"]["properties"].get(F[1], {}).get("enum", [o["reason"]]))
+        ok = any(F[0] in body(t) and o["outcome"] in body(t)[F[0]].get("enum", [o["outcome"]]) and
+                 (not o["reason"] or o["reason"] in body(t).get(F[1], {}).get("enum", [o["reason"]]))
                  for t in close_tools)
         if not ok:
             errs.append(f"outcome {o['outcome']}/{o['reason']} cannot be sent by any close_call")
