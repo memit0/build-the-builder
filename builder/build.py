@@ -58,12 +58,15 @@ def smoke(workflow_id, test_vars, log):
 
 def main():
     ap = argparse.ArgumentParser(usage=__doc__)
-    ap.add_argument("files", nargs="+", help="brief file(s), then the tool API json")
+    ap.add_argument("files", nargs="+", help="brief file(s), then the tool API JSON or YAML")
     ap.add_argument("--slot"); ap.add_argument("--rules", help="reuse a rule sheet instead of extracting")
     ap.add_argument("--no-save", action="store_true"); ap.add_argument("--test", help="practice brief letter for run_cases.py (A or B)")
     a = ap.parse_args()
-    briefs = [f for f in a.files if not f.endswith(".json")]
-    tool_api = next(f for f in a.files if f.endswith(".json"))
+    api_files = [f for f in a.files if pathlib.Path(f).suffix.lower() in {".json", ".yaml", ".yml"}]
+    if not api_files:
+        ap.error("provide a tool API file ending in .json, .yaml, or .yml")
+    tool_api = api_files[-1]
+    briefs = [f for f in a.files if f != tool_api]
     slot = a.slot or "-".join(pathlib.Path(b).stem for b in briefs)
     log = Trace(slot)
     t0 = time.time()
@@ -71,14 +74,14 @@ def main():
 
     api = api_spec.load(tool_api)
     out = ROOT / "out"; out.mkdir(exist_ok=True)
+    text = "\n\n".join(pathlib.Path(b).read_text() for b in briefs)
     if a.rules:
         rules = json.load(open(a.rules))
         log({"event": "rules_reused", "path": a.rules})
     else:
-        text = "\n\n".join(pathlib.Path(b).read_text() for b in briefs)
         rules = extract.extract(text, api, log=log)
     (out / f"{slot}.rules.json").write_text(json.dumps(rules, indent=1))
-    errs = extract.validate(rules, api)
+    errs = extract.validate(rules, api, text)
     log({"event": "rules", "path": str(out / f"{slot}.rules.json"), "validation_errors": errs})
 
     wf = generate.generate(rules, api)

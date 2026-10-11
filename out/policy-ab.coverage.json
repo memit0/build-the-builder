@@ -1,0 +1,5723 @@
+{
+  "inventory_origin": "rule_fields_only",
+  "requirements": [
+    {
+      "id": "field:bank_name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "bank_name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "bank_name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:agent_identity",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "agent_identity"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "agent_identity",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:call_vars.customer_id",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "call_vars.customer_id"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "call_vars.customer_id",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:call_vars.address_as",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "call_vars.address_as"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "call_vars.address_as",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:call_vars.full_name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "call_vars.full_name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "call_vars.full_name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:call_vars.now",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "call_vars.now"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "call_vars.now",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:call_vars.examples.0.name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "call_vars.examples.0.name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "call_vars.examples.0.name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:call_vars.examples.0.example",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "call_vars.examples.0.example"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "call_vars.examples.0.example",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:call_vars.examples.1.name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "call_vars.examples.1.name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "call_vars.examples.1.name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:call_vars.examples.1.example",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "call_vars.examples.1.example"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "call_vars.examples.1.example",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:call_vars.examples.2.name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "call_vars.examples.2.name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "call_vars.examples.2.name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:call_vars.examples.2.example",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "call_vars.examples.2.example"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "call_vars.examples.2.example",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:call_vars.examples.3.name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "call_vars.examples.3.name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "call_vars.examples.3.name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:call_vars.examples.3.example",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "call_vars.examples.3.example"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "call_vars.examples.3.example",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:call_vars.examples.4.name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "call_vars.examples.4.name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "call_vars.examples.4.name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:call_vars.examples.4.example",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "call_vars.examples.4.example"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "call_vars.examples.4.example",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:opening.first_sentence",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "opening.first_sentence"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "opening.first_sentence",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:opening.confirm_question",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "opening.confirm_question"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "opening.confirm_question",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:opening.forbidden_before_verification.0",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "opening.forbidden_before_verification.0"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "opening.forbidden_before_verification.0",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:opening.forbidden_before_verification.1",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "opening.forbidden_before_verification.1"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "opening.forbidden_before_verification.1",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:opening.forbidden_before_verification.2",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "opening.forbidden_before_verification.2"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "opening.forbidden_before_verification.2",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:opening.forbidden_before_verification.3",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "opening.forbidden_before_verification.3"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "opening.forbidden_before_verification.3",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:opening.forbidden_before_verification.4",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "opening.forbidden_before_verification.4"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "opening.forbidden_before_verification.4",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:opening.forbidden_before_verification.5",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "opening.forbidden_before_verification.5"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "opening.forbidden_before_verification.5",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:opening.confirmation_rule",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "opening.confirmation_rule"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "opening.confirmation_rule",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:opening.max_asks",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "opening.max_asks"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "opening.max_asks",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:opening.unclear.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "opening.unclear.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "opening.unclear.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:opening.unclear.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "opening.unclear.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "opening.unclear.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:opening.rules.0",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "opening.rules.0"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "opening.rules.0",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:opening.rules.1",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "opening.rules.1"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "opening.rules.1",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:opening.rules.2",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "opening.rules.2"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "opening.rules.2",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.rules.0",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.rules.0"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "third_party.rules.0",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.rules.1",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.rules.1"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "third_party.rules.1",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.rules.2",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.rules.2"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "third_party.rules.2",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.rules.3",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.rules.3"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "third_party.rules.3",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.rules.4",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.rules.4"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "third_party.rules.4",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.rules.5",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.rules.5"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "third_party.rules.5",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.callback.allow_today",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.callback.allow_today"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "third_party.callback.allow_today",
+          "mechanism": "code",
+          "location": "schedule_callback.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.callback.business_days_ahead",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.callback.business_days_ahead"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "third_party.callback.business_days_ahead",
+          "mechanism": "code",
+          "location": "schedule_callback.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.callback.window_start",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.callback.window_start"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "third_party.callback.window_start",
+          "mechanism": "code",
+          "location": "schedule_callback.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.callback.window_end",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.callback.window_end"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "third_party.callback.window_end",
+          "mechanism": "code",
+          "location": "schedule_callback.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.callback.extra_asks_when_outside",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.callback.extra_asks_when_outside"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "third_party.callback.extra_asks_when_outside",
+          "mechanism": "code",
+          "location": "schedule_callback.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.callback.booked.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.callback.booked.outcome"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "third_party.callback.booked.outcome",
+          "mechanism": "code",
+          "location": "schedule_callback.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.callback.booked.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.callback.booked.reason"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "third_party.callback.booked.reason",
+          "mechanism": "code",
+          "location": "schedule_callback.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.callback.not_booked.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.callback.not_booked.outcome"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "third_party.callback.not_booked.outcome",
+          "mechanism": "code",
+          "location": "schedule_callback.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.callback.not_booked.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.callback.not_booked.reason"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "third_party.callback.not_booked.reason",
+          "mechanism": "code",
+          "location": "schedule_callback.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.wrong_number.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.wrong_number.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "third_party.wrong_number.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.wrong_number.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.wrong_number.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "third_party.wrong_number.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.deceased.say",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.deceased.say"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "third_party.deceased.say",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.deceased.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.deceased.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "third_party.deceased.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:third_party.deceased.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "third_party.deceased.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "third_party.deceased.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.intro",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.intro"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.intro",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.questions.0.field",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.questions.0.field"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "identity.questions.0.field",
+          "mechanism": "code",
+          "location": "verify_identity.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.questions.0.ask",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.questions.0.ask"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.questions.0.ask",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.questions.0.kind",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.questions.0.kind"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.questions.0.kind",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.questions.0.digits",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.questions.0.digits"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.questions.0.digits",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.questions.0.how_to_send",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.questions.0.how_to_send"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.questions.0.how_to_send",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.questions.1.field",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.questions.1.field"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "identity.questions.1.field",
+          "mechanism": "code",
+          "location": "verify_identity.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.questions.1.ask",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.questions.1.ask"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.questions.1.ask",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.questions.1.kind",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.questions.1.kind"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.questions.1.kind",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.questions.1.digits",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.questions.1.digits"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.questions.1.digits",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.questions.1.how_to_send",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.questions.1.how_to_send"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.questions.1.how_to_send",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.numeric_date_order",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.numeric_date_order"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.numeric_date_order",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.max_wrong_total",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.max_wrong_total"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "identity.max_wrong_total",
+          "mechanism": "code",
+          "location": "verify_identity.post_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.hints.0.value",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.hints.0.value"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.hints.0.value",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.hints.0.instruction",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.hints.0.instruction"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.hints.0.instruction",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.hints.0.counts_as_wrong",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.hints.0.counts_as_wrong"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.hints.0.counts_as_wrong",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.failed.say",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.failed.say"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.failed.say",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.failed.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.failed.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.failed.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.failed.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.failed.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.failed.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.declined.rule",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.declined.rule"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.declined.rule",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.declined.explain",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.declined.explain"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.declined.explain",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.declined.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.declined.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.declined.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.declined.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.declined.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.declined.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.rules.0",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.rules.0"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.rules.0",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.rules.1",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.rules.1"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.rules.1",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.rules.2",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.rules.2"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.rules.2",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.rules.3",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.rules.3"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.rules.3",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.rules.4",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.rules.4"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.rules.4",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:identity.rules.5",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "identity.rules.5"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "identity.rules.5",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:products.0.type",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "products.0.type"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "products.0.type",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:products.0.spoken",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "products.0.spoken"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "products.0.spoken",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:products.0.floor_field",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "products.0.floor_field"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "products.0.floor_field",
+          "mechanism": "code",
+          "location": "create_promise.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:products.0.floor_percent",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "products.0.floor_percent"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "products.0.floor_percent",
+          "mechanism": "code",
+          "location": "create_promise.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:products.1.type",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "products.1.type"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "products.1.type",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:products.1.spoken",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "products.1.spoken"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "products.1.spoken",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:products.1.floor_field",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "products.1.floor_field"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "products.1.floor_field",
+          "mechanism": "code",
+          "location": "create_promise.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:products.1.floor_percent",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "products.1.floor_percent"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "products.1.floor_percent",
+          "mechanism": "code",
+          "location": "create_promise.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:products.2.type",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "products.2.type"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "products.2.type",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:products.2.spoken",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "products.2.spoken"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "products.2.spoken",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:products.2.floor_field",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "products.2.floor_field"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "products.2.floor_field",
+          "mechanism": "code",
+          "location": "create_promise.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:products.2.floor_percent",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "products.2.floor_percent"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "products.2.floor_percent",
+          "mechanism": "code",
+          "location": "create_promise.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:debt.intro",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "debt.intro"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "debt.intro",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:debt.per_product",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "debt.per_product"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "debt.per_product",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:debt.rules.0",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "debt.rules.0"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "debt.rules.0",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:debt.rules.1",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "debt.rules.1"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "debt.rules.1",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:debt.rules.2",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "debt.rules.2"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "debt.rules.2",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:debt.rules.3",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "debt.rules.3"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "debt.rules.3",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.business_weekdays.0",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.business_weekdays.0"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "calendar.business_weekdays.0",
+          "mechanism": "code",
+          "location": "prepare_deal.code"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.business_weekdays.1",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.business_weekdays.1"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "calendar.business_weekdays.1",
+          "mechanism": "code",
+          "location": "prepare_deal.code"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.business_weekdays.2",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.business_weekdays.2"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "calendar.business_weekdays.2",
+          "mechanism": "code",
+          "location": "prepare_deal.code"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.business_weekdays.3",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.business_weekdays.3"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "calendar.business_weekdays.3",
+          "mechanism": "code",
+          "location": "prepare_deal.code"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.business_weekdays.4",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.business_weekdays.4"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "calendar.business_weekdays.4",
+          "mechanism": "code",
+          "location": "prepare_deal.code"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.holidays.0",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.holidays.0"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "calendar.holidays.0",
+          "mechanism": "code",
+          "location": "prepare_deal.code"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.holidays.1",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.holidays.1"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "calendar.holidays.1",
+          "mechanism": "code",
+          "location": "prepare_deal.code"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.holidays.2",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.holidays.2"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "calendar.holidays.2",
+          "mechanism": "code",
+          "location": "prepare_deal.code"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.holidays.3",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.holidays.3"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "calendar.holidays.3",
+          "mechanism": "code",
+          "location": "prepare_deal.code"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.holidays.4",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.holidays.4"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "calendar.holidays.4",
+          "mechanism": "code",
+          "location": "prepare_deal.code"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.next_weekday",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.next_weekday"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "calendar.next_weekday",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.week_starts",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.week_starts"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "calendar.week_starts",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.earliest_promise_business_days",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.earliest_promise_business_days"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "calendar.earliest_promise_business_days",
+          "mechanism": "code",
+          "location": "create_promise.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.rules.0",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.rules.0"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "calendar.rules.0",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.rules.1",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.rules.1"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "calendar.rules.1",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.rules.2",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.rules.2"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "calendar.rules.2",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.rules.3",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.rules.3"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "calendar.rules.3",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.rules.4",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.rules.4"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "calendar.rules.4",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.rules.5",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.rules.5"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "calendar.rules.5",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.rules.6",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.rules.6"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "calendar.rules.6",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.rules.7",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.rules.7"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "calendar.rules.7",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:calendar.rules.8",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "calendar.rules.8"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "calendar.rules.8",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:bands.0.name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "bands.0.name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "bands.0.name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:bands.0.min_days_late",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "bands.0.min_days_late"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "bands.0.min_days_late",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:bands.0.max_days_late",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "bands.0.max_days_late"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "bands.0.max_days_late",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:bands.0.deadline_offset",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "bands.0.deadline_offset"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "bands.0.deadline_offset",
+          "mechanism": "code",
+          "location": "create_promise.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:bands.0.deadline_unit",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "bands.0.deadline_unit"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "bands.0.deadline_unit",
+          "mechanism": "code",
+          "location": "create_promise.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:bands.0.attempts",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "bands.0.attempts"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "bands.0.attempts",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:bands.1.name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "bands.1.name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "bands.1.name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:bands.1.min_days_late",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "bands.1.min_days_late"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "bands.1.min_days_late",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:bands.1.max_days_late",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "bands.1.max_days_late"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "bands.1.max_days_late",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:bands.1.deadline_offset",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "bands.1.deadline_offset"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "bands.1.deadline_offset",
+          "mechanism": "code",
+          "location": "create_promise.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:bands.1.deadline_unit",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "bands.1.deadline_unit"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "bands.1.deadline_unit",
+          "mechanism": "code",
+          "location": "create_promise.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:bands.1.attempts",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "bands.1.attempts"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "bands.1.attempts",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:amount_rules.0",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "amount_rules.0"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "amount_rules.0",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:amount_rules.1",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "amount_rules.1"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "amount_rules.1",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:amount_rules.2",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "amount_rules.2"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "amount_rules.2",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:amount_rules.3",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "amount_rules.3"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "amount_rules.3",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:first_ask",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "first_ask"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "first_ask",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:multi_first_ask",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "multi_first_ask"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "multi_first_ask",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.counts_as_attempt",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.counts_as_attempt"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.counts_as_attempt",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.attempts.0.number",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.attempts.0.number"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.attempts.0.number",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.attempts.0.date_rule",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.attempts.0.date_rule"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.attempts.0.date_rule",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.attempts.0.date_param",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.attempts.0.date_param"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.attempts.0.date_param",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.attempts.0.amount_rule",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.attempts.0.amount_rule"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.attempts.0.amount_rule",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.attempts.0.amount_param",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.attempts.0.amount_param"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.attempts.0.amount_param",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.attempts.0.text",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.attempts.0.text"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.attempts.0.text",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.attempts.1.number",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.attempts.1.number"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.attempts.1.number",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.attempts.1.bands.0",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.attempts.1.bands.0"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.attempts.1.bands.0",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.attempts.1.date_rule",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.attempts.1.date_rule"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.attempts.1.date_rule",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.attempts.1.date_param",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.attempts.1.date_param"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.attempts.1.date_param",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.attempts.1.amount_rule",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.attempts.1.amount_rule"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.attempts.1.amount_rule",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.attempts.1.amount_param",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.attempts.1.amount_param"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.attempts.1.amount_param",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.attempts.1.text",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.attempts.1.text"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.attempts.1.text",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.exhausted.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.exhausted.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.exhausted.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.exhausted.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.exhausted.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.exhausted.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.rules.0",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.rules.0"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.rules.0",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.rules.1",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.rules.1"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.rules.1",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:persuasion.rules.2",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "persuasion.rules.2"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "persuasion.rules.2",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:confirmation.readback_question",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "confirmation.readback_question"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "confirmation.readback_question",
+          "mechanism": "code+prompt",
+          "location": "create_promise.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:confirmation.success_sentence",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "confirmation.success_sentence"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "confirmation.success_sentence",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:confirmation.retries_on_failure",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "confirmation.retries_on_failure"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "confirmation.retries_on_failure",
+          "mechanism": "code",
+          "location": "create_promise.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:confirmation.failure_say",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "confirmation.failure_say"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "confirmation.failure_say",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:confirmation.failure.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "confirmation.failure.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "confirmation.failure.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:confirmation.failure.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "confirmation.failure.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "confirmation.failure.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:confirmation.rules.0",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "confirmation.rules.0"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "confirmation.rules.0",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:confirmation.rules.1",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "confirmation.rules.1"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "confirmation.rules.1",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:confirmation.rules.2",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "confirmation.rules.2"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "confirmation.rules.2",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:confirmation.rules.3",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "confirmation.rules.3"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "confirmation.rules.3",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:confirmation.rules.4",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "confirmation.rules.4"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "confirmation.rules.4",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:confirmation.rules.5",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "confirmation.rules.5"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "confirmation.rules.5",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.0.name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.0.name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.0.name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.0.trigger",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.0.trigger"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.0.trigger",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.0.instructions",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.0.instructions"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.0.instructions",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.0.phase",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.0.phase"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.0.phase",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.0.close_outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.0.close_outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.0.close_outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.0.note_reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.0.note_reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.0.note_reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.1.name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.1.name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.1.name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.1.trigger",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.1.trigger"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.1.trigger",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.1.instructions",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.1.instructions"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.1.instructions",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.1.phase",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.1.phase"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.1.phase",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.1.close_outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.1.close_outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.1.close_outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.1.close_reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.1.close_reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.1.close_reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.1.note_reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.1.note_reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.1.note_reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.2.name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.2.name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.2.name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.2.trigger",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.2.trigger"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.2.trigger",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.2.instructions",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.2.instructions"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.2.instructions",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.2.phase",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.2.phase"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.2.phase",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.2.transfer_queue",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.2.transfer_queue"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.2.transfer_queue",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.2.close_outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.2.close_outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.2.close_outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.2.close_reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.2.close_reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.2.close_reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.2.note_reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.2.note_reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.2.note_reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.3.name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.3.name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.3.name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.3.trigger",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.3.trigger"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.3.trigger",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.3.instructions",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.3.instructions"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.3.instructions",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.3.phase",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.3.phase"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.3.phase",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.3.transfer_queue",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.3.transfer_queue"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.3.transfer_queue",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.3.close_outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.3.close_outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.3.close_outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.3.close_reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.3.close_reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.3.close_reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.4.name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.4.name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.4.name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.4.trigger",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.4.trigger"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.4.trigger",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.4.instructions",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.4.instructions"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.4.instructions",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.4.phase",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.4.phase"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.4.phase",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.4.transfer_queue",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.4.transfer_queue"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.4.transfer_queue",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.4.close_outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.4.close_outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.4.close_outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.4.close_reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.4.close_reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.4.close_reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.5.name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.5.name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.5.name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.5.trigger",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.5.trigger"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.5.trigger",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.5.instructions",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.5.instructions"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.5.instructions",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.5.phase",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.5.phase"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.5.phase",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.6.name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.6.name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.6.name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.6.trigger",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.6.trigger"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.6.trigger",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.6.instructions",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.6.instructions"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.6.instructions",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.6.phase",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.6.phase"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.6.phase",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.7.name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.7.name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.7.name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.7.trigger",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.7.trigger"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.7.trigger",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.7.instructions",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.7.instructions"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.7.instructions",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.7.phase",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.7.phase"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.7.phase",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.8.name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.8.name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.8.name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.8.trigger",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.8.trigger"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.8.trigger",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.8.instructions",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.8.instructions"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.8.instructions",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.8.phase",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.8.phase"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.8.phase",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.8.close_outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.8.close_outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.8.close_outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.8.close_reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.8.close_reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.8.close_reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.8.note_reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.8.note_reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.8.note_reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.9.name",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.9.name"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.9.name",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.9.trigger",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.9.trigger"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.9.trigger",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.9.instructions",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.9.instructions"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.9.instructions",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:intents.9.phase",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "intents.9.phase"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "intents.9.phase",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:notes.used",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "notes.used"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "notes.used",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:notes.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "notes.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "notes.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:notes.on_transfer",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "notes.on_transfer"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "notes.on_transfer",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:notes.single_product",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "notes.single_product"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "notes.single_product",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:multi_product.0",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "multi_product.0"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "multi_product.0",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:multi_product.1",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "multi_product.1"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "multi_product.1",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:multi_product.2",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "multi_product.2"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "multi_product.2",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:multi_product.3",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "multi_product.3"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "multi_product.3",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:multi_product.4",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "multi_product.4"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "multi_product.4",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:multi_product.5",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "multi_product.5"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "multi_product.5",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:multi_product.6",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "multi_product.6"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "multi_product.6",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:multi_product.7",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "multi_product.7"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "multi_product.7",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:multi_product.8",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "multi_product.8"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "multi_product.8",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:multi_product.9",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "multi_product.9"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "multi_product.9",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:multi_product.10",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "multi_product.10"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "multi_product.10",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:multi_product.11",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "multi_product.11"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "multi_product.11",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.0.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.0.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.0.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.0.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.0.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.0.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.1.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.1.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.1.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.1.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.1.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.1.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.2.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.2.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.2.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.2.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.2.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.2.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.2.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.2.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.2.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.3.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.3.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.3.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.3.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.3.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.3.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.3.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.3.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.3.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.4.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.4.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.4.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.4.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.4.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.4.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.4.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.4.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.4.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.5.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.5.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.5.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.5.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.5.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.5.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.5.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.5.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.5.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.6.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.6.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.6.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.6.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.6.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.6.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.6.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.6.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.6.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.7.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.7.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.7.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.7.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.7.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.7.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.7.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.7.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.7.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.8.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.8.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.8.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.8.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.8.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.8.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.8.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.8.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.8.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.9.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.9.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.9.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.9.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.9.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.9.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.9.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.9.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.9.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.10.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.10.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.10.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.10.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.10.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.10.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.10.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.10.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.10.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.11.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.11.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.11.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.11.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.11.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.11.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.11.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.11.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.11.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.12.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.12.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.12.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.12.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.12.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.12.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.12.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.12.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.12.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.13.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.13.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.13.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.13.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.13.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.13.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.13.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.13.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.13.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.14.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.14.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.14.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.14.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.14.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.14.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.14.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.14.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.14.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.15.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.15.outcome"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.15.outcome",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.15.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.15.reason"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.15.reason",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:outcomes.15.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "outcomes.15.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "outcomes.15.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:close_precedence.0.state",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "close_precedence.0.state"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "close_precedence.0.state",
+          "mechanism": "code",
+          "location": "close_call.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:close_precedence.0.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "close_precedence.0.outcome"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "close_precedence.0.outcome",
+          "mechanism": "code",
+          "location": "close_call.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:close_precedence.1.state",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "close_precedence.1.state"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "close_precedence.1.state",
+          "mechanism": "code",
+          "location": "close_call.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:close_precedence.1.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "close_precedence.1.outcome"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "close_precedence.1.outcome",
+          "mechanism": "code",
+          "location": "close_call.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:close_precedence.2.state",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "close_precedence.2.state"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "close_precedence.2.state",
+          "mechanism": "code",
+          "location": "close_call.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:close_precedence.2.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "close_precedence.2.outcome"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "close_precedence.2.outcome",
+          "mechanism": "code",
+          "location": "close_call.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:close_precedence.3.state",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "close_precedence.3.state"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "close_precedence.3.state",
+          "mechanism": "code",
+          "location": "close_call.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:close_precedence.3.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "close_precedence.3.outcome"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "close_precedence.3.outcome",
+          "mechanism": "code",
+          "location": "close_call.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:close_precedence.4.state",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "close_precedence.4.state"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "close_precedence.4.state",
+          "mechanism": "code",
+          "location": "close_call.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:close_precedence.4.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "close_precedence.4.outcome"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "close_precedence.4.outcome",
+          "mechanism": "code",
+          "location": "close_call.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:close_precedence.4.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "close_precedence.4.reason"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "close_precedence.4.reason",
+          "mechanism": "code",
+          "location": "close_call.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:close_precedence.5.state",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "close_precedence.5.state"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "close_precedence.5.state",
+          "mechanism": "code",
+          "location": "close_call.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:close_precedence.5.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "close_precedence.5.outcome"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "close_precedence.5.outcome",
+          "mechanism": "code",
+          "location": "close_call.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:close_precedence.5.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "close_precedence.5.reason"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "close_precedence.5.reason",
+          "mechanism": "code",
+          "location": "close_call.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:close_precedence.6.state",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "close_precedence.6.state"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "close_precedence.6.state",
+          "mechanism": "code",
+          "location": "close_call.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:close_precedence.6.outcome",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "close_precedence.6.outcome"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "close_precedence.6.outcome",
+          "mechanism": "code",
+          "location": "close_call.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:close_precedence.6.reason",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "close_precedence.6.reason"
+      ],
+      "coverage": "covered",
+      "evidence": [
+        {
+          "path": "close_precedence.6.reason",
+          "mechanism": "code",
+          "location": "close_call.pre_process_code"
+        }
+      ]
+    },
+    {
+      "id": "field:closing_rules.0",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "closing_rules.0"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "closing_rules.0",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:closing_rules.1",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "closing_rules.1"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "closing_rules.1",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:closing_rules.2",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "closing_rules.2"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "closing_rules.2",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:closing_rules.3",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "closing_rules.3"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "closing_rules.3",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:verbatim_phrases.0.text",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "verbatim_phrases.0.text"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "verbatim_phrases.0.text",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:verbatim_phrases.0.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "verbatim_phrases.0.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "verbatim_phrases.0.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:verbatim_phrases.1.text",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "verbatim_phrases.1.text"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "verbatim_phrases.1.text",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:verbatim_phrases.1.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "verbatim_phrases.1.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "verbatim_phrases.1.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:verbatim_phrases.2.text",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "verbatim_phrases.2.text"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "verbatim_phrases.2.text",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:verbatim_phrases.2.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "verbatim_phrases.2.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "verbatim_phrases.2.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:verbatim_phrases.3.text",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "verbatim_phrases.3.text"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "verbatim_phrases.3.text",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:verbatim_phrases.3.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "verbatim_phrases.3.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "verbatim_phrases.3.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:verbatim_phrases.4.text",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "verbatim_phrases.4.text"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "verbatim_phrases.4.text",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:verbatim_phrases.4.when",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "verbatim_phrases.4.when"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "verbatim_phrases.4.when",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:overrides.0",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "overrides.0"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "overrides.0",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:overrides.1",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "overrides.1"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "overrides.1",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:overrides.2",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "overrides.2"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "overrides.2",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:overrides.3",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "overrides.3"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "overrides.3",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:overrides.4",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "overrides.4"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "overrides.4",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:overrides.5",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "overrides.5"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "overrides.5",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:overrides.6",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "overrides.6"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "overrides.6",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:overrides.7",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "overrides.7"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "overrides.7",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:overrides.8",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "overrides.8"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "overrides.8",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:overrides.9",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "overrides.9"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "overrides.9",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:unmapped_rules.0",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "unmapped_rules.0"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "unmapped_rules.0",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:unmapped_rules.1",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "unmapped_rules.1"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "unmapped_rules.1",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:unmapped_rules.2",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "unmapped_rules.2"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "unmapped_rules.2",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:unmapped_rules.3",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "unmapped_rules.3"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "unmapped_rules.3",
+          "mechanism": "prompt",
+          "location": "generated prompts"
+        }
+      ]
+    },
+    {
+      "id": "field:execution.minimum_offer.limit",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "execution.minimum_offer.limit"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "execution.minimum_offer.limit",
+          "mechanism": "code+prompt",
+          "location": "policy_step.code"
+        }
+      ]
+    },
+    {
+      "id": "field:execution.minimum_offer.scope",
+      "source": "",
+      "critical": false,
+      "status": "active",
+      "paths": [
+        "execution.minimum_offer.scope"
+      ],
+      "coverage": "weak",
+      "evidence": [
+        {
+          "path": "execution.minimum_offer.scope",
+          "mechanism": "code+prompt",
+          "location": "policy_step.code"
+        }
+      ]
+    }
+  ],
+  "warnings": [
+    "Legacy rule sheet: no independent requirement inventory. Re-extract before final submission.",
+    "Minimum-offer limit is unspecified; no offer-count guarantee.",
+    "Customer intent/confirmation classification and free speech remain model-dependent.",
+    "Freya code_exec dialogue tool argument handling needs a live platform regression."
+  ]
+}

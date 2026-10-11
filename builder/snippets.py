@@ -38,12 +38,18 @@ def addbd(d, n):
 def say(d):
     return DAYS[d.weekday()] + ' ' + str(d.day) + ' ' + d.strftime('%B') + ' ' + str(d.year) + ' (' + d.isoformat() + ')'
 def get_now():
-    for v in (vars.get(C['now_var']), C['now_example']):
+    s = str(vars.get(C['now_var']) or '').strip().replace('Z', '')
+    try:
+        return datetime.datetime.fromisoformat(s[:16])
+    except Exception:
+        pass
+    for f in ('%a %d %b %Y %H:%M', '%A %d %B %Y %H:%M', '%d %b %Y %H:%M', '%d/%m/%Y %H:%M'):
         try:
-            return datetime.datetime.fromisoformat(str(v or '').strip().replace('Z', '')[:16])
+            return datetime.datetime.strptime(s, f)
         except Exception:
             pass
-    return datetime.datetime.now()
+    # ponytail: unreadable now -> real UTC clock, never the brief's example date
+    return datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
 '''
 
 SETUP = r'''
@@ -106,6 +112,23 @@ def last_bd_of_week(start):
     while x >= first and not isbd(x):
         x = x - datetime.timedelta(days=1)
     return x
+def amount_expr(e, pr, full):
+    op = e['op']
+    if op == 'money': return float(e['value'])
+    if op == 'percent_of': return round(full * float(e['value']) / 100.0, 2)
+    if op == 'account_field': return num(pr.get(e['field']))
+    vals = [amount_expr(a, pr, full) for a in e['args']]
+    return max(vals) if op == 'max' else min(vals)
+def date_expr(e, pr, today, band):
+    op = e['op']
+    if op == 'today': return today
+    if op == 'account_date': return datetime.date.fromisoformat(str(pr[e['field']])[:10])
+    if op == 'band_deadline':
+        d = addbd(today, band['offset']) if band['unit'] == 'business_days' else today + datetime.timedelta(days=int(band['offset']))
+        while not isbd(d) and d > today: d -= datetime.timedelta(days=1)
+        return d
+    base = date_expr(e['args'][0], pr, today, band)
+    return addbd(base, e['value']) if e['unit'] == 'business_days' else base + datetime.timedelta(days=int(e['value']))
 def attempt_date(rule, n, today, deadline):
     if rule == 'today':
         d = today if isbd(today) else nextbd(today)
@@ -136,29 +159,32 @@ try:
     now = get_now()
     today = now.date()
     earliest = addbd(today, C['earliest']) if C['earliest'] else today
+    F = C['fields']
     PT = dict((p['type'], p) for p in C['products'])
     out = []
     facts = ['Today: ' + say(today) + '. Time now: ' + now.strftime('%H:%M') + '.', 'Number of late products: ' + str(len(prods)) + '.']
     lines = []
     for i, pr in enumerate(prods):
-        typ = str(pr.get('type') or '')
-        spec = PT.get(typ) or dict(spoken=typ.replace('_', ' '), floor_field='', floor_percent=0)
-        full = num(pr.get('past_due'))
-        dl = int(num(pr.get('days_late')))
-        floor = num(pr.get(spec['floor_field'])) if spec['floor_field'] else round(full * float(spec['floor_percent'] or 0) / 100.0, 2)
+        typ = str(pr.get(F['r_type']) or '')
+        spec = PT.get(typ)
+        if not spec: raise ValueError('no rules for product type ' + typ)
+        if pr.get(F['r_past_due']) is None or pr.get(F['r_days_late']) is None:
+            raise ValueError('get_account item misses ' + F['r_past_due'] + ' or ' + F['r_days_late'])
+        full = num(pr.get(F['r_past_due']))
+        dl = int(num(pr.get(F['r_days_late'])))
+        floor = amount_expr(spec['floor_rule'], pr, full)
         if floor <= 0 or floor > full:
             floor = full
         band = band_for(dl)
-        deadline = addbd(today, band['offset']) if band['unit'] == 'business_days' else today + datetime.timedelta(days=int(band['offset']))
-        if band['unit'] != 'business_days' and not isbd(deadline):
-            while not isbd(deadline) and deadline > today:
-                deadline = deadline - datetime.timedelta(days=1)
+        deadline = date_expr(spec['deadline_rule'], pr, today, band)
+        while deadline >= today and not isbd(deadline):
+            deadline -= datetime.timedelta(days=1)
         f = Fmt((k, str(v)) for k, v in pr.items())
         try:
             phrase = spec['spoken'].format_map(f).strip()
         except Exception:
             phrase = typ.replace('_', ' ')
-        pid = str(pr.get('product_id') or ('p' + str(i + 1)))
+        pid = str(pr.get(F['r_product_id']) or ('p' + str(i + 1)))
         valid = []
         x = earliest
         while x <= deadline:
@@ -315,7 +341,6 @@ try:
             Q = C['questions']
             f = str(V.get('x_id_field') or '')
             okf = [x for x in str(V.get('x_idok') or '').split(',') if x]
-            left = d.get('wrong_answers_left')
             hint = d.get('hint')
             if d.get('verified') is True and f and f not in okf:
                 okf.append(f)
@@ -326,20 +351,29 @@ try:
                 V['id_state'] = 'verified'
                 d['all_verified'] = True
                 d['what_to_do_next'] = 'All answers are correct. The customer is verified.'
-            elif hint:
-                h = H.get(str(hint))
-                d['what_to_do_next'] = ('Hint ' + str(hint) + ': ' + h['instruction'] + (' This is NOT a wrong answer.' if not h['wrong'] else '')) if h else ('Hint ' + str(hint) + '. Ask the same question again and call verify_identity again.')
-            elif d.get('ok') is False and left is None and d.get('verified') is None:
+            elif d.get('error'):
+                d['what_to_do_next'] = 'The identity service returned an error. This is NOT a wrong answer. Retry the same answer by calling verify_identity again.'
+            elif d.get('ok') is False and d.get('verified') is None and not hint:
                 d['what_to_do_next'] = 'The answer could not be read. This is NOT a wrong answer. Ask the same question again, then call verify_identity again.'
             elif d.get('verified') is True:
                 nq = todo[0]
                 d['what_to_do_next'] = 'Correct. Now ask the next security question: "' + nq['ask'] + '" Then call verify_identity with field ' + nq['field'] + '.'
-            elif (isinstance(left, int) and left <= 0) or d.get('error'):
-                V['id_state'] = 'failed'
-                fl = C['failed']
-                d['what_to_do_next'] = 'That answer is wrong and the identity check has FAILED. Ask nothing more and say nothing about any account, product, amount or why you called. ' + fl['say'] + ' Then thank the customer, say goodbye, and in the same message call close_call with outcome ' + fl['outcome'] + (' and reason ' + fl['reason'] if fl['reason'] else '') + '.'
             else:
-                d['what_to_do_next'] = 'That answer is wrong. Wrong answers left: ' + str(left) + '. Tell the customer it did not match and ask the same question again, then call verify_identity again.'
+                h = H.get(str(hint)) if hint else None
+                wrong = bool(h and h['wrong']) or (not hint and d.get('verified') is False)
+                count = int(V.get('x_idwrong') or 0) + (1 if wrong else 0)
+                if wrong:
+                    V['x_idwrong'] = count
+                if wrong and count >= C['max_wrong_total']:
+                    V['id_state'] = 'failed'
+                    fl = C['failed']
+                    d['what_to_do_next'] = 'That answer is wrong and the identity check has FAILED. Ask nothing more and say nothing about any account, product, amount or why you called. ' + fl['say'] + ' Then thank the customer, say goodbye, and in the same message call close_call with outcome ' + fl['outcome'] + (' and reason ' + fl['reason'] if fl['reason'] else '') + '.'
+                elif hint:
+                    d['what_to_do_next'] = ('Hint ' + str(hint) + ': ' + h['instruction'] + (' This is NOT a wrong answer.' if not h['wrong'] else '')) if h else ('Hint ' + str(hint) + '. Ask the same question again and call verify_identity again.')
+                elif wrong:
+                    d['what_to_do_next'] = 'That answer is wrong. Wrong answers left: ' + str(max(0, C['max_wrong_total'] - count)) + '. Tell the customer it did not match and ask the same question again, then call verify_identity again.'
+                else:
+                    d['what_to_do_next'] = 'The answer could not be checked. This is NOT a wrong answer. Ask the same question again, then call verify_identity again.'
 except Exception:
     pass
 '''

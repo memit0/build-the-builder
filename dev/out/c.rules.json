@@ -45,8 +45,7 @@
    "reason": "unconfirmed"
   },
   "rules": [
-   "Say: \"Good afternoon, this is the automated assistant of Harbor Savings Bank. This call may be recorded for quality purposes.\" Never mention arrears, money owed, a balance or any product before identity is verified.",
-   "Then ask: \"May I speak with {salutation} {family_name}?\"",
+   "Never mention arrears, money owed, a balance or any product before identity is verified.",
    "If asked whether this is a real person, say you are Harbor Savings Bank's automated assistant."
   ]
  },
@@ -92,13 +91,13 @@
     "ask": "What is the postcode of your registered address?",
     "kind": "postcode",
     "digits": 0,
-    "how_to_send": "in capitals with one space"
+    "how_to_send": "postcode in capitals with one space"
    },
    {
     "field": "birth_year",
     "ask": "What is your year of birth?",
     "kind": "year",
-    "digits": 0,
+    "digits": 4,
     "how_to_send": "four digits"
    }
   ],
@@ -118,8 +117,16 @@
   },
   "rules": [
    "Ask the postcode of the registered address first, then the year of birth. Send the postcode in capitals with one space, and the year as four digits.",
-   "Two wrong answers in total end the check. Tell the customer to call the number on the back of their card. Close as identity_failed / wrong_answers."
+   "Two wrong answers in total end the check. Tell the customer to call the number on the back of their card. Close as identity_failed / wrong_answers.",
+   "After both answers pass, call get_account."
   ]
+ },
+ "account_fields": {
+  "list": "products",
+  "past_due": "past_due",
+  "days_late": "days_late",
+  "product_id": "product_id",
+  "type": "type"
  },
  "products": [
   {
@@ -143,7 +150,7 @@
  ],
  "debt": {
   "intro": "I am calling from Harbor Savings about overdue payments.",
-  "per_product": "Your {product}: {past_due} overdue, {days_late} days overdue.",
+  "per_product": "Your {product} has {past_due} overdue, {days_late} days overdue.",
   "rules": [
    "After both answers pass, call get_account. Say you are calling from Harbor Savings about overdue payments. For each product say its name (\"overdraft\", \"credit card ending {card_last4}\", \"mortgage\"), the overdue amount and days overdue."
   ]
@@ -171,7 +178,7 @@
    "Business days are Monday to Friday except 2026-11-11, 2026-11-26, 2026-11-27, 2026-12-24, 2026-12-25 and 2026-12-31.",
    "A promise date must be a business day from tomorrow onwards (never today), and not after the latest date. A weekend or holiday becomes the next business day.",
    "\"Next Monday\" means the first Monday after today.",
-   "call_time: The current date and time. Use it for every date rule."
+   "call_time is the current date and time. Use it for every date rule."
   ]
  },
  "bands": [
@@ -240,7 +247,7 @@
   "rules": [
    "Green band: there is no persuasion. After a no, close that product as refused.",
    "When the attempts are used up, close as no_commitment / declined.",
-   "Offer the full overdue amount first. If too much, offer min_due, once."
+   "Each product has its own band."
   ]
  },
  "confirmation": {
@@ -254,15 +261,14 @@
   },
   "rules": [
    "Read back and ask \"Shall I record that?\". Record only after a yes.",
-   "If create_promise fails, try twice more. After three failures say \"I'm sorry, our system could not save this.\" and close as no_commitment / system_down.",
-   "After success say: \"Thank you, a confirmation letter will be posted to you.\""
+   "If create_promise fails, try twice more. After three failures say \"I'm sorry, our system could not save this.\" and close as no_commitment / system_down."
   ]
  },
  "intents": [
   {
    "name": "already_paid",
-   "trigger": "Already paid",
-   "instructions": "Say it may take two business days to show. Close as already_paid.",
+   "trigger": "Customer says the debt is already paid",
+   "instructions": "Say it may take two business days to show. Close as already_paid (no reason). With several products, add note R4 for that product.",
    "phase": "after_verification",
    "transfer_queue": "",
    "close_outcome": "already_paid",
@@ -271,8 +277,8 @@
   },
   {
    "name": "hardship",
-   "trigger": "Hardship (illness, bereavement, unemployment, divorce)",
-   "instructions": "One sentence of empathy, offer the hardship team. Accept: transfer to hardship_team, close as handed_over / hardship. Decline: close as no_commitment / hardship.",
+   "trigger": "Customer mentions hardship (illness, bereavement, unemployment, divorce)",
+   "instructions": "One sentence of empathy, offer the hardship team. Accept: transfer to hardship_team, close as handed_over / hardship. Decline: close as no_commitment / hardship. With several products, add note R2 (notes are added on a transfer too).",
    "phase": "after_verification",
    "transfer_queue": "hardship_team",
    "close_outcome": "handed_over",
@@ -281,7 +287,7 @@
   },
   {
    "name": "restructuring",
-   "trigger": "Wants to spread the payments",
+   "trigger": "Customer wants to spread the payments",
    "instructions": "Transfer to payment_plans, close as handed_over / plan.",
    "phase": "after_verification",
    "transfer_queue": "payment_plans",
@@ -291,7 +297,7 @@
   },
   {
    "name": "human",
-   "trigger": "Asks for a person",
+   "trigger": "Customer asks for a person",
    "instructions": "Transfer to agents immediately (no need to ask first), close as handed_over / person.",
    "phase": "any",
    "transfer_queue": "agents",
@@ -301,8 +307,8 @@
   },
   {
    "name": "dispute",
-   "trigger": "Disputes the debt",
-   "instructions": "Close as no_commitment / disputed.",
+   "trigger": "Customer disputes the debt",
+   "instructions": "Close as no_commitment / disputed. With several products, add note R3 for that product.",
    "phase": "after_verification",
    "transfer_queue": "",
    "close_outcome": "no_commitment",
@@ -311,13 +317,23 @@
   },
   {
    "name": "robot",
-   "trigger": "Asked whether this is a real person",
+   "trigger": "Customer asks whether this is a real person",
    "instructions": "Say you are Harbor Savings Bank's automated assistant.",
    "phase": "any",
    "transfer_queue": "",
    "close_outcome": "",
    "close_reason": "",
    "note_reason": ""
+  },
+  {
+   "name": "refuses_to_pay",
+   "trigger": "Customer gives a plain no to paying",
+   "instructions": "A plain no uses one persuasion attempt. Green band: there is no persuasion; after a no, close that product as refused. When the attempts are used up, close as no_commitment / declined. With several products add note R1.",
+   "phase": "after_verification",
+   "transfer_queue": "",
+   "close_outcome": "no_commitment",
+   "close_reason": "declined",
+   "note_reason": "R1"
   }
  ],
  "notes": {
@@ -329,8 +345,7 @@
  "multi_product": [
   "Go through the products in order. Each product has its own band.",
   "For each product without a promise call add_note with code R1 (refused), R2 (hardship), R3 (disputed), R4 (paid) or R5 (system). Notes are added on a transfer too.",
-  "With one promise or more close as promise_taken. With none: no_commitment with the reason of the first product noted.",
-  "With several products: \"Would you be able to settle all of these by tomorrow?\""
+  "With one promise or more close as promise_taken. With none: no_commitment with the reason of the first product noted (R1 = declined, R2 = hardship, R3 = disputed, R5 = system_down)."
  ],
  "outcomes": [
   {
@@ -341,77 +356,77 @@
   {
    "outcome": "already_paid",
    "reason": "",
-   "when": "rule 25"
+   "when": "customer already paid (say it may take two business days to show)"
   },
   {
    "outcome": "handed_over",
    "reason": "hardship",
-   "when": "rule 26"
+   "when": "hardship team accepted, transferred to hardship_team"
   },
   {
    "outcome": "handed_over",
    "reason": "plan",
-   "when": "rule 27"
+   "when": "wants to spread the payments, transferred to payment_plans"
   },
   {
    "outcome": "handed_over",
    "reason": "person",
-   "when": "rule 28"
+   "when": "asks for a person, transferred to agents"
   },
   {
    "outcome": "no_commitment",
    "reason": "declined",
-   "when": "rule 21"
+   "when": "persuasion attempts used up"
   },
   {
    "outcome": "no_commitment",
    "reason": "hardship",
-   "when": "rule 26"
+   "when": "hardship team offer declined"
   },
   {
    "outcome": "no_commitment",
    "reason": "disputed",
-   "when": "rule 29"
+   "when": "debt disputed"
   },
   {
    "outcome": "no_commitment",
    "reason": "system_down",
-   "when": "rule 23"
+   "when": "create_promise failed three times"
   },
   {
    "outcome": "identity_failed",
    "reason": "wrong_answers",
-   "when": "rule 11"
+   "when": "two wrong security answers in total"
   },
   {
    "outcome": "identity_failed",
    "reason": "refused",
-   "when": "rule 12"
+   "when": "customer will not answer the security questions"
   },
   {
    "outcome": "contact_failed",
    "reason": "callback_set",
-   "when": "rule 6"
+   "when": "callback booked with someone else"
   },
   {
    "outcome": "contact_failed",
    "reason": "no_time",
-   "when": "rule 7"
+   "when": "no callback time in the window after asking twice more"
   },
   {
    "outcome": "contact_failed",
    "reason": "not_customer",
-   "when": "rule 8"
+   "when": "wrong number"
   },
   {
    "outcome": "contact_failed",
    "reason": "bereavement",
-   "when": "rule 9"
+   "when": "customer has passed away"
   },
   {
    "outcome": "contact_failed",
    "reason": "unconfirmed",
-   "when": "rule 3"
+   "when": "person not confirmed after three asks"
   }
  ],
  "close_precedence": [
@@ -423,6 +438,16 @@
   {
    "state": "promise_recorded",
    "outcome": "promise_taken",
+   "reason": ""
+  },
+  {
+   "state": "all_notes_paid",
+   "outcome": "already_paid",
+   "reason": ""
+  },
+  {
+   "state": "first_non_paid_note",
+   "outcome": "no_commitment",
    "reason": ""
   },
   {
@@ -439,28 +464,18 @@
    "state": "identity_failed",
    "outcome": "identity_failed",
    "reason": "wrong_answers"
-  },
-  {
-   "state": "all_notes_paid",
-   "outcome": "already_paid",
-   "reason": ""
-  },
-  {
-   "state": "first_non_paid_note",
-   "outcome": "no_commitment",
-   "reason": ""
   }
  ],
  "closing_rules": [
   "Say goodbye before close_call.",
   "A transfer after a promise closes as handed_over.",
   "With one promise or more close as promise_taken. With none: no_commitment with the reason of the first product noted.",
-  "close_call: End the call. Always the last tool call. Nothing is accepted after it."
+  "close_call is always the last tool call; nothing is accepted after it."
  ],
  "verbatim_phrases": [
   {
    "text": "Good afternoon, this is the automated assistant of Harbor Savings Bank. This call may be recorded for quality purposes.",
-   "when": "First sentence of the call"
+   "when": "Opening"
   },
   {
    "text": "May I speak with {salutation} {family_name}?",
@@ -468,7 +483,7 @@
   },
   {
    "text": "Please accept our condolences.",
-   "when": "The customer has passed away"
+   "when": "Customer has passed away"
   },
   {
    "text": "Would you be able to settle this by tomorrow?",
@@ -491,9 +506,132 @@
    "when": "After a promise is recorded"
   }
  ],
+ "evidence": [
+  {
+   "path": "bands[0].min_days_late",
+   "quote": "| 1 to 10 | green | 15 business days after today | 0 |",
+   "derived": false
+  },
+  {
+   "path": "bands[0].max_days_late",
+   "quote": "| 1 to 10 | green | 15 business days after today | 0 |",
+   "derived": false
+  },
+  {
+   "path": "bands[0].deadline_offset",
+   "quote": "| 1 to 10 | green | 15 business days after today | 0 |",
+   "derived": false
+  },
+  {
+   "path": "bands[0].attempts",
+   "quote": "| 1 to 10 | green | 15 business days after today | 0 |",
+   "derived": false
+  },
+  {
+   "path": "bands[1].min_days_late",
+   "quote": "| 11 to 30 | amber | 10 business days after today | 1 |",
+   "derived": false
+  },
+  {
+   "path": "bands[1].max_days_late",
+   "quote": "| 11 to 30 | amber | 10 business days after today | 1 |",
+   "derived": false
+  },
+  {
+   "path": "bands[1].deadline_offset",
+   "quote": "| 11 to 30 | amber | 10 business days after today | 1 |",
+   "derived": false
+  },
+  {
+   "path": "bands[1].attempts",
+   "quote": "| 11 to 30 | amber | 10 business days after today | 1 |",
+   "derived": false
+  },
+  {
+   "path": "bands[2].min_days_late",
+   "quote": "| 31 to 60 | red | 5 business days after today | 2 |",
+   "derived": false
+  },
+  {
+   "path": "bands[2].max_days_late",
+   "quote": "| 31 to 60 | red | 5 business days after today | 2 |",
+   "derived": false
+  },
+  {
+   "path": "bands[2].deadline_offset",
+   "quote": "| 31 to 60 | red | 5 business days after today | 2 |",
+   "derived": false
+  },
+  {
+   "path": "bands[2].attempts",
+   "quote": "| 31 to 60 | red | 5 business days after today | 2 |",
+   "derived": false
+  },
+  {
+   "path": "opening.max_asks",
+   "quote": "Ask a maximum of three times.",
+   "derived": false
+  },
+  {
+   "path": "identity.max_wrong_total",
+   "quote": "Two wrong answers in total end the check.",
+   "derived": false
+  },
+  {
+   "path": "third_party.callback.window_start",
+   "quote": "A callback may be booked on any of the next two business days (not today), from 09:00 to 17:30, both included.",
+   "derived": false
+  },
+  {
+   "path": "third_party.callback.window_end",
+   "quote": "A callback may be booked on any of the next two business days (not today), from 09:00 to 17:30, both included.",
+   "derived": false
+  },
+  {
+   "path": "third_party.callback.business_days_ahead",
+   "quote": "A callback may be booked on any of the next two business days (not today), from 09:00 to 17:30, both included.",
+   "derived": false
+  },
+  {
+   "path": "confirmation.retries_on_failure",
+   "quote": "If `create_promise` fails, try twice more.",
+   "derived": false
+  },
+  {
+   "path": "calendar.holidays[0]",
+   "quote": "Business days are Monday to Friday except 2026-11-11, 2026-11-26, 2026-11-27, 2026-12-24, 2026-12-25 and 2026-12-31.",
+   "derived": false
+  },
+  {
+   "path": "calendar.holidays[1]",
+   "quote": "Business days are Monday to Friday except 2026-11-11, 2026-11-26, 2026-11-27, 2026-12-24, 2026-12-25 and 2026-12-31.",
+   "derived": false
+  },
+  {
+   "path": "calendar.holidays[2]",
+   "quote": "Business days are Monday to Friday except 2026-11-11, 2026-11-26, 2026-11-27, 2026-12-24, 2026-12-25 and 2026-12-31.",
+   "derived": false
+  },
+  {
+   "path": "calendar.holidays[3]",
+   "quote": "Business days are Monday to Friday except 2026-11-11, 2026-11-26, 2026-11-27, 2026-12-24, 2026-12-25 and 2026-12-31.",
+   "derived": false
+  },
+  {
+   "path": "calendar.holidays[4]",
+   "quote": "Business days are Monday to Friday except 2026-11-11, 2026-11-26, 2026-11-27, 2026-12-24, 2026-12-25 and 2026-12-31.",
+   "derived": false
+  },
+  {
+   "path": "calendar.holidays[5]",
+   "quote": "Business days are Monday to Friday except 2026-11-11, 2026-11-26, 2026-11-27, 2026-12-24, 2026-12-25 and 2026-12-31.",
+   "derived": false
+  }
+ ],
  "overrides": [],
  "unmapped_rules": [
   "Harbor Savings calls customers who are 1 to 60 days late on one to three products. The agent confirms the person, checks identity, states what is late, agrees a payment where it can, and closes the call with the correct code.",
-  "customer_id: Pass it to every tool call."
+  "Pass customer_id to every tool call.",
+  "The brief's limit of two wrong security answers applies even though verify_identity allows three."
  ]
 }

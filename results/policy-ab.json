@@ -1,0 +1,624 @@
+{
+ "agent_id": "ed11c31a-7bff-4534-8bdc-de3a624e2303",
+ "simulation_id": "d86e5944-dd51-4d76-8c9c-f858429ba482",
+ "iteration_id": "e0f34c3a-87c6-41de-9791-706228256dd5",
+ "seconds": 158,
+ "passed": 5,
+ "total": 13,
+ "runs": 1,
+ "final": [
+  {
+   "id": "PUB-01",
+   "family": "Happy path",
+   "passes": 0,
+   "runs": 1,
+   "pass": false
+  },
+  {
+   "id": "PUB-02",
+   "family": "Third party",
+   "passes": 1,
+   "runs": 1,
+   "pass": true
+  },
+  {
+   "id": "PUB-03",
+   "family": "Identity",
+   "passes": 1,
+   "runs": 1,
+   "pass": true
+  },
+  {
+   "id": "PUB-04",
+   "family": "Dates",
+   "passes": 0,
+   "runs": 1,
+   "pass": false
+  },
+  {
+   "id": "PUB-05",
+   "family": "Hardship",
+   "passes": 1,
+   "runs": 1,
+   "pass": true
+  },
+  {
+   "id": "PUB-06",
+   "family": "Amounts",
+   "passes": 0,
+   "runs": 1,
+   "pass": false
+  },
+  {
+   "id": "PUB-07",
+   "family": "Dates",
+   "passes": 0,
+   "runs": 1,
+   "pass": false
+  },
+  {
+   "id": "PUB-08",
+   "family": "Already paid",
+   "passes": 1,
+   "runs": 1,
+   "pass": true
+  },
+  {
+   "id": "PUB-09",
+   "family": "Restructuring",
+   "passes": 1,
+   "runs": 1,
+   "pass": true
+  },
+  {
+   "id": "PUB-10",
+   "family": "Tool failure",
+   "passes": 0,
+   "runs": 1,
+   "pass": false
+  },
+  {
+   "id": "PUB-11",
+   "family": "Multi-product",
+   "passes": 0,
+   "runs": 1,
+   "pass": false
+  },
+  {
+   "id": "PUB-12",
+   "family": "Multi-product",
+   "passes": 0,
+   "runs": 1,
+   "pass": false
+  },
+  {
+   "id": "PUB-13",
+   "family": "Multi-product",
+   "passes": 0,
+   "runs": 1,
+   "pass": false
+  }
+ ],
+ "rows": [
+  {
+   "id": "PUB-01",
+   "level": "easy",
+   "family": "Happy path",
+   "pass": false,
+   "failed": [
+    "outcome ('no_promise', 'service_error'), expected ('promise', None)",
+    "promises [], expected [('p1', 420.0, '2026-10-14')]",
+    "conversation: The conversation failed to meet two of the success criteria: 1. The 'create_promise' tool was called twice (both times resulting in errors) instead of exactly once. 2. The required sentence regarding a text-message was never said, as the assistant encountered a technical error and ended the call without recording the promise or mentioning a confirmation text. The call ended correctly via the 'assi"
+   ],
+   "call_id": "0c07cc21-34ff-4ae7-a2f5-7f66c7bc4f05",
+   "tools": [
+    "verify_identity",
+    "verify_identity",
+    "get_account",
+    "close_call"
+   ],
+   "customer_id": "c_4c230f35-374",
+   "slowest_turn_s": 4.1,
+   "ended": "assistant-ended-call"
+  },
+  {
+   "id": "PUB-02",
+   "level": "medium",
+   "family": "Third party",
+   "pass": true,
+   "failed": [],
+   "call_id": "60efcc35-1d8b-4a3a-b39f-35d66db3da6f",
+   "tools": [
+    "schedule_callback",
+    "close_call"
+   ],
+   "customer_id": "c_416c851f-fe1",
+   "slowest_turn_s": 3.1,
+   "ended": "assistant-ended-call"
+  },
+  {
+   "id": "PUB-03",
+   "level": "medium",
+   "family": "Identity",
+   "pass": true,
+   "failed": [],
+   "call_id": "04c9518f-5662-46ac-b32e-ab9ae1a57944",
+   "tools": [
+    "verify_identity",
+    "verify_identity",
+    "verify_identity",
+    "close_call"
+   ],
+   "customer_id": "c_1d82c242-354",
+   "slowest_turn_s": 2.7,
+   "ended": "assistant-ended-call"
+  },
+  {
+   "id": "PUB-04",
+   "level": "medium",
+   "family": "Dates",
+   "pass": false,
+   "failed": [
+    "outcome ('no_promise', 'service_error'), expected ('promise', None)",
+    "promises [], expected [('p1', 1250.0, '2026-10-23')]"
+   ],
+   "call_id": "92c3d2db-88dc-403c-b177-163b58f3f8f2",
+   "tools": [
+    "verify_identity",
+    "verify_identity",
+    "get_account",
+    "close_call"
+   ],
+   "customer_id": "c_3149c021-1c8",
+   "slowest_turn_s": 12.7,
+   "ended": "assistant-ended-call"
+  },
+  {
+   "id": "PUB-05",
+   "level": "medium",
+   "family": "Hardship",
+   "pass": true,
+   "failed": [],
+   "call_id": "91482ca7-45e6-469a-95ff-2b4625e5e2f8",
+   "tools": [
+    "verify_identity",
+    "verify_identity",
+    "get_account",
+    "close_call"
+   ],
+   "customer_id": "c_ae73f18e-4e6",
+   "slowest_turn_s": 1.3,
+   "ended": "assistant-ended-call"
+  },
+  {
+   "id": "PUB-06",
+   "level": "hard",
+   "family": "Amounts",
+   "pass": false,
+   "failed": [
+    "outcome ('no_promise', 'service_error'), expected ('promise', None)",
+    "promises [], expected [('p1', 637.5, '2026-10-16')]",
+    "conversation: The agent followed the protocol regarding the payment negotiation by not asking 'how much she can pay' and correctly offering the minimum payment of 637.50 once with the mandatory note that the rest stays overdue in [Message 8]. However, the success criterion for a promise of 637.50 on Friday 16 October was not met because the promise was not successfully established. System events show a 'functio"
+   ],
+   "call_id": "1dd87d5c-25cb-4296-8471-201e56a28da4",
+   "tools": [
+    "verify_identity",
+    "verify_identity",
+    "get_account",
+    "close_call"
+   ],
+   "customer_id": "c_fe9712f0-730",
+   "slowest_turn_s": 3.3,
+   "ended": "assistant-ended-call"
+  },
+  {
+   "id": "PUB-07",
+   "level": "hard",
+   "family": "Dates",
+   "pass": false,
+   "failed": [
+    "outcome ('no_promise', 'service_error'), expected ('promise', None)",
+    "promises [], expected [('p1', 540.0, '2026-10-27')]",
+    "conversation: The agent followed the instructions to ask for the exact day once and correctly redirected the customer from October 26 to October 27 due to a bank holiday. However, the promise was not successfully recorded in the system. The system events show that the 'create_promise' function failed due to a technical error ('Missing required field: url'), and the call was subsequently closed with an outcome o"
+   ],
+   "call_id": "339fe5ac-9b35-4aae-9fa1-565470f4e149",
+   "tools": [
+    "verify_identity",
+    "verify_identity",
+    "get_account",
+    "close_call"
+   ],
+   "customer_id": "c_fc8045cc-c04",
+   "slowest_turn_s": 4.4,
+   "ended": "assistant-ended-call"
+  },
+  {
+   "id": "PUB-08",
+   "level": "medium",
+   "family": "Already paid",
+   "pass": true,
+   "failed": [],
+   "call_id": "ee8d711f-ff09-4cf4-8bf8-bdd305260fd6",
+   "tools": [
+    "verify_identity",
+    "verify_identity",
+    "get_account",
+    "close_call"
+   ],
+   "customer_id": "c_5cdd5777-2e8",
+   "slowest_turn_s": 3.4,
+   "ended": "assistant-ended-call"
+  },
+  {
+   "id": "PUB-09",
+   "level": "medium",
+   "family": "Restructuring",
+   "pass": true,
+   "failed": [],
+   "call_id": "0885890c-f79d-41be-b339-dcce67295c14",
+   "tools": [
+    "verify_identity",
+    "verify_identity",
+    "get_account",
+    "transfer_to_agent",
+    "close_call"
+   ],
+   "customer_id": "c_0a5f1d5a-d5c",
+   "slowest_turn_s": 3.7,
+   "ended": "assistant-ended-call"
+  },
+  {
+   "id": "PUB-10",
+   "level": "hard",
+   "family": "Tool failure",
+   "pass": false,
+   "failed": [
+    "outcome ('no_promise', 'service_error'), expected ('promise', None)",
+    "promises [], expected [('p1', 365.0, '2026-10-16')]",
+    "conversation: The success criteria were not met because no promise was successfully created in the ledger. The system events show that the 'create_promise' function was called twice but failed both times due to a 'Missing required field: url' error. As a result, the requirement for exactly one promise in the ledger after the retry was not satisfied. The call ended properly with 'assistant-ended-call' and the ag"
+   ],
+   "call_id": "c1bae478-1865-4e58-b68d-86daf0ae297b",
+   "tools": [
+    "verify_identity",
+    "verify_identity",
+    "get_account",
+    "close_call"
+   ],
+   "customer_id": "c_6239c0c9-864",
+   "slowest_turn_s": 10.2,
+   "ended": "assistant-ended-call"
+  },
+  {
+   "id": "PUB-11",
+   "level": "medium",
+   "family": "Multi-product",
+   "pass": false,
+   "failed": [
+    "outcome ('no_promise', 'service_error'), expected ('promise', None)",
+    "promises [], expected [('p1', 220.0, '2026-10-16'), ('p2', 640.0, '2026-10-16'), ('p3', 75.0, '2026-10-16')]",
+    "conversation: The assistant failed to satisfy the requirement for one create_promise per product. While the assistant correctly stated all three products before making an ask (Message 6) and provided a read-back that the user confirmed (Messages 8 and 9), the tool calls for `create_promise` failed due to a system error (Missing required field: url). The assistant acknowledged this failure in the transcript (Mes"
+   ],
+   "call_id": "28afa2ab-7426-42e9-b57b-465cc4ff8a7d",
+   "tools": [
+    "verify_identity",
+    "verify_identity",
+    "get_account",
+    "close_call"
+   ],
+   "customer_id": "c_043cd305-175",
+   "slowest_turn_s": 12.1,
+   "ended": "assistant-ended-call"
+  },
+  {
+   "id": "PUB-12",
+   "level": "hard",
+   "family": "Multi-product",
+   "pass": false,
+   "failed": [
+    "outcome ('no_promise', 'refused'), expected ('promise', None)",
+    "promises [], expected [('p1', 510.0, '2026-10-15')]",
+    "notes [('p1', 'service_error'), ('p2', 'refused')], expected [('p2', 'refused'), ('p3', 'refused')]",
+    "conversation: The conversation failed to meet several success criteria: - No promise was successfully recorded for the credit card (p1). Although the user agreed, the 'create_promise' system call failed twice due to errors, and the assistant explicitly stated in Message 18 that it was unable to record the promise. - A 'refused' note was only added for the personal loan (p2). There was no 'add_note' call for the"
+   ],
+   "call_id": "138f3d22-d03f-4956-9703-dd73e02b10ad",
+   "tools": [
+    "verify_identity",
+    "verify_identity",
+    "verify_identity",
+    "get_account",
+    "add_note",
+    "add_note",
+    "close_call"
+   ],
+   "customer_id": "c_5138aeac-508",
+   "slowest_turn_s": 6.1,
+   "ended": "assistant-ended-call"
+  },
+  {
+   "id": "PUB-13",
+   "level": "hard",
+   "family": "Multi-product",
+   "pass": false,
+   "failed": [
+    "outcome ('no_promise', 'service_error'), expected ('promise', None)",
+    "promises [], expected [('p1', 300.0, '2026-10-30'), ('p2', 900.0, '2026-10-23')]",
+    "notes [('p1', 'service_error'), ('p2', 'service_error')], expected []",
+    "conversation: The success criteria were not met because the promises were not successfully recorded. While the assistant performed a correct read-back in [Message 8] mentioning both 30 October and 23 October, the system events show that the 'create_promise' function failed multiple times due to a technical error ('Missing required field: url'). Consequently, the assistant explicitly informed the customer in [Me"
+   ],
+   "call_id": "9b329a5b-65c1-4952-8e84-e6d84736143d",
+   "tools": [
+    "verify_identity",
+    "verify_identity",
+    "get_account",
+    "add_note",
+    "add_note",
+    "close_call"
+   ],
+   "customer_id": "c_9e2d0364-cc2",
+   "slowest_turn_s": 7.7,
+   "ended": "assistant-ended-call"
+  }
+ ],
+ "all_rows": [
+  [
+   {
+    "id": "PUB-01",
+    "level": "easy",
+    "family": "Happy path",
+    "pass": false,
+    "failed": [
+     "outcome ('no_promise', 'service_error'), expected ('promise', None)",
+     "promises [], expected [('p1', 420.0, '2026-10-14')]",
+     "conversation: The conversation failed to meet two of the success criteria: 1. The 'create_promise' tool was called twice (both times resulting in errors) instead of exactly once. 2. The required sentence regarding a text-message was never said, as the assistant encountered a technical error and ended the call without recording the promise or mentioning a confirmation text. The call ended correctly via the 'assi"
+    ],
+    "call_id": "0c07cc21-34ff-4ae7-a2f5-7f66c7bc4f05",
+    "tools": [
+     "verify_identity",
+     "verify_identity",
+     "get_account",
+     "close_call"
+    ],
+    "customer_id": "c_4c230f35-374",
+    "slowest_turn_s": 4.1,
+    "ended": "assistant-ended-call"
+   },
+   {
+    "id": "PUB-02",
+    "level": "medium",
+    "family": "Third party",
+    "pass": true,
+    "failed": [],
+    "call_id": "60efcc35-1d8b-4a3a-b39f-35d66db3da6f",
+    "tools": [
+     "schedule_callback",
+     "close_call"
+    ],
+    "customer_id": "c_416c851f-fe1",
+    "slowest_turn_s": 3.1,
+    "ended": "assistant-ended-call"
+   },
+   {
+    "id": "PUB-03",
+    "level": "medium",
+    "family": "Identity",
+    "pass": true,
+    "failed": [],
+    "call_id": "04c9518f-5662-46ac-b32e-ab9ae1a57944",
+    "tools": [
+     "verify_identity",
+     "verify_identity",
+     "verify_identity",
+     "close_call"
+    ],
+    "customer_id": "c_1d82c242-354",
+    "slowest_turn_s": 2.7,
+    "ended": "assistant-ended-call"
+   },
+   {
+    "id": "PUB-04",
+    "level": "medium",
+    "family": "Dates",
+    "pass": false,
+    "failed": [
+     "outcome ('no_promise', 'service_error'), expected ('promise', None)",
+     "promises [], expected [('p1', 1250.0, '2026-10-23')]"
+    ],
+    "call_id": "92c3d2db-88dc-403c-b177-163b58f3f8f2",
+    "tools": [
+     "verify_identity",
+     "verify_identity",
+     "get_account",
+     "close_call"
+    ],
+    "customer_id": "c_3149c021-1c8",
+    "slowest_turn_s": 12.7,
+    "ended": "assistant-ended-call"
+   },
+   {
+    "id": "PUB-05",
+    "level": "medium",
+    "family": "Hardship",
+    "pass": true,
+    "failed": [],
+    "call_id": "91482ca7-45e6-469a-95ff-2b4625e5e2f8",
+    "tools": [
+     "verify_identity",
+     "verify_identity",
+     "get_account",
+     "close_call"
+    ],
+    "customer_id": "c_ae73f18e-4e6",
+    "slowest_turn_s": 1.3,
+    "ended": "assistant-ended-call"
+   },
+   {
+    "id": "PUB-06",
+    "level": "hard",
+    "family": "Amounts",
+    "pass": false,
+    "failed": [
+     "outcome ('no_promise', 'service_error'), expected ('promise', None)",
+     "promises [], expected [('p1', 637.5, '2026-10-16')]",
+     "conversation: The agent followed the protocol regarding the payment negotiation by not asking 'how much she can pay' and correctly offering the minimum payment of 637.50 once with the mandatory note that the rest stays overdue in [Message 8]. However, the success criterion for a promise of 637.50 on Friday 16 October was not met because the promise was not successfully established. System events show a 'functio"
+    ],
+    "call_id": "1dd87d5c-25cb-4296-8471-201e56a28da4",
+    "tools": [
+     "verify_identity",
+     "verify_identity",
+     "get_account",
+     "close_call"
+    ],
+    "customer_id": "c_fe9712f0-730",
+    "slowest_turn_s": 3.3,
+    "ended": "assistant-ended-call"
+   },
+   {
+    "id": "PUB-07",
+    "level": "hard",
+    "family": "Dates",
+    "pass": false,
+    "failed": [
+     "outcome ('no_promise', 'service_error'), expected ('promise', None)",
+     "promises [], expected [('p1', 540.0, '2026-10-27')]",
+     "conversation: The agent followed the instructions to ask for the exact day once and correctly redirected the customer from October 26 to October 27 due to a bank holiday. However, the promise was not successfully recorded in the system. The system events show that the 'create_promise' function failed due to a technical error ('Missing required field: url'), and the call was subsequently closed with an outcome o"
+    ],
+    "call_id": "339fe5ac-9b35-4aae-9fa1-565470f4e149",
+    "tools": [
+     "verify_identity",
+     "verify_identity",
+     "get_account",
+     "close_call"
+    ],
+    "customer_id": "c_fc8045cc-c04",
+    "slowest_turn_s": 4.4,
+    "ended": "assistant-ended-call"
+   },
+   {
+    "id": "PUB-08",
+    "level": "medium",
+    "family": "Already paid",
+    "pass": true,
+    "failed": [],
+    "call_id": "ee8d711f-ff09-4cf4-8bf8-bdd305260fd6",
+    "tools": [
+     "verify_identity",
+     "verify_identity",
+     "get_account",
+     "close_call"
+    ],
+    "customer_id": "c_5cdd5777-2e8",
+    "slowest_turn_s": 3.4,
+    "ended": "assistant-ended-call"
+   },
+   {
+    "id": "PUB-09",
+    "level": "medium",
+    "family": "Restructuring",
+    "pass": true,
+    "failed": [],
+    "call_id": "0885890c-f79d-41be-b339-dcce67295c14",
+    "tools": [
+     "verify_identity",
+     "verify_identity",
+     "get_account",
+     "transfer_to_agent",
+     "close_call"
+    ],
+    "customer_id": "c_0a5f1d5a-d5c",
+    "slowest_turn_s": 3.7,
+    "ended": "assistant-ended-call"
+   },
+   {
+    "id": "PUB-10",
+    "level": "hard",
+    "family": "Tool failure",
+    "pass": false,
+    "failed": [
+     "outcome ('no_promise', 'service_error'), expected ('promise', None)",
+     "promises [], expected [('p1', 365.0, '2026-10-16')]",
+     "conversation: The success criteria were not met because no promise was successfully created in the ledger. The system events show that the 'create_promise' function was called twice but failed both times due to a 'Missing required field: url' error. As a result, the requirement for exactly one promise in the ledger after the retry was not satisfied. The call ended properly with 'assistant-ended-call' and the ag"
+    ],
+    "call_id": "c1bae478-1865-4e58-b68d-86daf0ae297b",
+    "tools": [
+     "verify_identity",
+     "verify_identity",
+     "get_account",
+     "close_call"
+    ],
+    "customer_id": "c_6239c0c9-864",
+    "slowest_turn_s": 10.2,
+    "ended": "assistant-ended-call"
+   },
+   {
+    "id": "PUB-11",
+    "level": "medium",
+    "family": "Multi-product",
+    "pass": false,
+    "failed": [
+     "outcome ('no_promise', 'service_error'), expected ('promise', None)",
+     "promises [], expected [('p1', 220.0, '2026-10-16'), ('p2', 640.0, '2026-10-16'), ('p3', 75.0, '2026-10-16')]",
+     "conversation: The assistant failed to satisfy the requirement for one create_promise per product. While the assistant correctly stated all three products before making an ask (Message 6) and provided a read-back that the user confirmed (Messages 8 and 9), the tool calls for `create_promise` failed due to a system error (Missing required field: url). The assistant acknowledged this failure in the transcript (Mes"
+    ],
+    "call_id": "28afa2ab-7426-42e9-b57b-465cc4ff8a7d",
+    "tools": [
+     "verify_identity",
+     "verify_identity",
+     "get_account",
+     "close_call"
+    ],
+    "customer_id": "c_043cd305-175",
+    "slowest_turn_s": 12.1,
+    "ended": "assistant-ended-call"
+   },
+   {
+    "id": "PUB-12",
+    "level": "hard",
+    "family": "Multi-product",
+    "pass": false,
+    "failed": [
+     "outcome ('no_promise', 'refused'), expected ('promise', None)",
+     "promises [], expected [('p1', 510.0, '2026-10-15')]",
+     "notes [('p1', 'service_error'), ('p2', 'refused')], expected [('p2', 'refused'), ('p3', 'refused')]",
+     "conversation: The conversation failed to meet several success criteria: - No promise was successfully recorded for the credit card (p1). Although the user agreed, the 'create_promise' system call failed twice due to errors, and the assistant explicitly stated in Message 18 that it was unable to record the promise. - A 'refused' note was only added for the personal loan (p2). There was no 'add_note' call for the"
+    ],
+    "call_id": "138f3d22-d03f-4956-9703-dd73e02b10ad",
+    "tools": [
+     "verify_identity",
+     "verify_identity",
+     "verify_identity",
+     "get_account",
+     "add_note",
+     "add_note",
+     "close_call"
+    ],
+    "customer_id": "c_5138aeac-508",
+    "slowest_turn_s": 6.1,
+    "ended": "assistant-ended-call"
+   },
+   {
+    "id": "PUB-13",
+    "level": "hard",
+    "family": "Multi-product",
+    "pass": false,
+    "failed": [
+     "outcome ('no_promise', 'service_error'), expected ('promise', None)",
+     "promises [], expected [('p1', 300.0, '2026-10-30'), ('p2', 900.0, '2026-10-23')]",
+     "notes [('p1', 'service_error'), ('p2', 'service_error')], expected []",
+     "conversation: The success criteria were not met because the promises were not successfully recorded. While the assistant performed a correct read-back in [Message 8] mentioning both 30 October and 23 October, the system events show that the 'create_promise' function failed multiple times due to a technical error ('Missing required field: url'). Consequently, the assistant explicitly informed the customer in [Me"
+    ],
+    "call_id": "9b329a5b-65c1-4952-8e84-e6d84736143d",
+    "tools": [
+     "verify_identity",
+     "verify_identity",
+     "get_account",
+     "add_note",
+     "add_note",
+     "close_call"
+    ],
+    "customer_id": "c_9e2d0364-cc2",
+    "slowest_turn_s": 7.7,
+    "ended": "assistant-ended-call"
+   }
+  ]
+ ]
+}

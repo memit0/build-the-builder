@@ -18,6 +18,9 @@ def O(d="", **props): return {"type": "object", "description": d, "properties": 
 def OR(d=""): return O(d, outcome=S("close_call outcome, exactly as in the outcome table"), reason=S("close_call reason, exactly as in the table; '' when the table lists none"))
 def TEXTS(d): return A(S(), d)
 
+def EXPR(ref, ops, extra):
+    return O("A typed expression; use only the listed operations.", op=E(ops), value=N(), field=S(), unit=E(["business_days", "calendar_days", ""]), args=A({"$ref": ref}), **extra)
+
 STATES = ["transferred", "promise_recorded", "promise_service_error", "callback_booked", "identity_failed", "all_notes_paid", "first_non_paid_note"]
 DATE_RULES = ["today", "next_business_day", "end_of_week", "deadline", "business_days_from_today", "calendar_days_from_today", "other"]
 AMOUNT_RULES = ["full", "floor", "full_or_floor_if_too_much", "percent_of_full", "other"]
@@ -34,6 +37,8 @@ SCHEMA = O(
         now=S("Name of the variable that holds the current date and time."),
         examples=A(O(name=S(), example=S("The brief's example value, or a realistic one.")), "Every call variable with an example value."),
     ),
+    customer_id_fields=A(O(tool=S("Exact tool name from the API."), field=S("Exact request field that receives the call's customer ID.")),
+                         "For every tool requiring the customer's ID, map it to the exact request field name from the API."),
     opening=O(
         first_sentence=S("The exact first sentence the agent says, written from the brief's requirements (who is calling, disclosures such as recording). No reason for the call. May use {{variables}}."),
         confirm_question=S("The exact question that asks whether the right person is on the line, with {{variables}}."),
@@ -73,11 +78,19 @@ SCHEMA = O(
         declined=O(rule=S("When a refusal to answer closes the call, in the brief's words."), explain=S("What to explain the first time they decline."), outcome=S(), reason=S()),
         rules=TEXTS("Every other identity rule, in the brief's words."),
     ),
+    account_fields=O(
+        "Which get_account response field plays each role. Copy names exactly from the tool API's get_account response.",
+        list=S("The response field that holds the array of late products, e.g. 'products'."),
+        past_due=S("Item field with the full past-due (overdue) amount, e.g. 'past_due'. Not a minimum or instalment."),
+        days_late=S("Item field with how many days the product is late, e.g. 'days_late'."),
+        product_id=S("Item field with the product's id, e.g. 'product_id'."),
+        type=S("Item field with the product type, e.g. 'type'."),
+    ),
     products=A(O(
         type=S("Product type value as get_account returns it."),
         spoken=S("How to name it, with {field} placeholders for get_account fields, e.g. 'credit card ending {card_last4}'."),
-        floor_field=S("The get_account field that holds the lowest amount that can be recorded; '' if a percentage is used."),
-        floor_percent=N("Floor as a percent of the past-due amount when the brief uses one; 0 otherwise."),
+        floor_rule={"$ref": "#/$defs/amount_expr"},
+        deadline_rule={"$ref": "#/$defs/date_expr"},
     ), "One entry per product type."),
     debt=O(
         intro=S("The sentence said right after verification, before the products, e.g. 'I am calling from the collections team about a late payment.' Exactly what the brief requires, nothing more."),
@@ -145,17 +158,33 @@ SCHEMA = O(
     ), "Ordered: the first state that holds decides close_call. Only states the brief's closing rules support."),
     closing_rules=TEXTS("Every closing rule, in the brief's words."),
     verbatim_phrases=A(O(text=S("Exact quoted sentence."), when=S()), "Every sentence the brief quotes for the agent to say."),
+    evidence=A(O(
+        path=S("Rule-sheet path of the value, e.g. 'bands[1].attempts' or 'calendar.holidays[0]'."),
+        quote=S("The brief's sentence or table row that states the value, copied character for character. When a memo overrides it, quote the memo."),
+        derived=B("True only when the value is worked out from the quote rather than written in it, e.g. 'today or the next business day' -> 1."),
+    ), "Proof for the key values, one entry each: every bands[i] min_days_late, max_days_late, deadline_offset and attempts; opening.max_asks; "
+       "identity.max_wrong_total; third_party.callback window_start, window_end and business_days_ahead; confirmation.retries_on_failure; every calendar.holidays[i]."),
     overrides=TEXTS("Where a later instruction (memo, amendment, newer date) replaced an earlier one: what changed. Empty if none."),
     unmapped_rules=TEXTS("Every rule that fits nowhere above, in the brief's words. Nothing in the brief may be dropped."),
 )
+
+SCHEMA["$defs"] = {
+    "amount_expr": EXPR("#/$defs/amount_expr", ["money", "percent_of", "account_field", "max", "min"], {}),
+    "date_expr": EXPR("#/$defs/date_expr", ["today", "account_date", "band_deadline", "add_days"], {}),
+}
 
 
 # ---------------------------------------------------------------- the model call
 
 SYS = """You turn a bank's collection-call brief into a precise JSON rule sheet. A program builds a phone agent from your sheet, so every value must come from the brief.
 - Read every word. Most failures come from one skipped rule.
+- floor_rule is an amount expression: money(value), percent_of(value, field='past_due'), account_field(field), or max/min(args=[expressions]).
+- deadline_rule is a date expression: today, account_date(field), band_deadline, or add_days(args=[one date], value, unit). Use the product's own fields when the brief says product-specific; use band_deadline only when the band controls it.
+- Every expression object has op, value, field, unit, args. Unused slots are 0, '', '', and []. money uses value; percent_of uses value as percent and field='past_due'; account_field/account_date use field; max/min use args; add_days uses one date arg plus value and unit.
+- Preserve the brief's actual calculation in these expressions. If an expression cannot be represented, do not approximate it; explain it in unmapped_rules.
 - The brief may be raw bank material: mails, a policy extract, memos and code lists. A later or dated instruction (a memo, an amendment) replaces an earlier one. Apply it and record the change in `overrides`.
 - Map every outcome, reason, queue, identity field and product type to the exact values of the tool API enums. A code list in the brief tells you the mapping.
+- Map every request field that carries the call's customer ID in `customer_id_fields`, using exact tool and field names from the API.
 - The phone agent never sees the brief, so resolve cross-references: write "treat it as a flat refusal (one persuasion attempt)", not "rule 30" or "section 7".
 - Copy quoted sentences word for word. Keep rules in the brief's own words where the schema asks for rules.
 - Never invent a rule, value or phrase the brief does not give. When the brief is silent, use the neutral value ('' / 0 / false / []).
@@ -192,10 +221,12 @@ def extract(brief_text, api, log=print):
         except Exception as e:
             log({"event": "model_call_failed", "purpose": purpose, "error": str(e)[:300]})
             return current
+    def check(r):
+        return validate(r, api, brief_text)
     ctx = f"BRIEF:\n<<<\n{brief_text}\n>>>\n\nTOOL API:\n<<<\n{api_spec.compact(api)}\n>>>\n"
     rules = _ask(ctx + "\nFill the rule sheet from the brief.", "extract the rule sheet from the brief", log)
     for rnd in range(2):
-        errs = validate(rules, api)
+        errs = check(rules)
         if not errs:
             break
         log({"event": "validate", "errors": errs})
@@ -205,22 +236,34 @@ def extract(brief_text, api, log=print):
                    "\n\nAudit it against the brief, rule by rule. Find every rule that is missing, wrong, contradicted, or not in the "
                    "brief's words, every override from a memo that was not applied, every enum value that does not match the tool API, "
                    "and every quoted sentence that is not exact. Return the corrected full rule sheet.", "audit the rule sheet against the brief", rules)
-    if len(validate(audited, api)) <= len(validate(rules, api)):
+    keep = len(check(audited)) <= len(check(rules))
+    old, new = _flat(rules), _flat(audited)
+    log({"event": "audit_changes", "kept": keep,
+         "changes": [{"path": p, "before": old.get(p), "after": new.get(p)} for p in sorted(old.keys() | new.keys()) if old.get(p) != new.get(p)]})
+    if keep:
         rules = audited
-    errs = validate(rules, api)
+    errs = check(rules)
     if errs:
         log({"event": "validate", "errors": errs})
         fixed = ask_or_keep(ctx + "\nYour rule sheet:\n" + json.dumps(rules) + "\n\nIt has these errors:\n- " + "\n- ".join(errs) +
                      "\n\nReturn the corrected full rule sheet.", "repair rule sheet after audit", rules)
-        if len(validate(fixed, api)) < len(errs):
+        if len(check(fixed)) < len(errs):
             rules = fixed
     return rules
 
 
 # ---------------------------------------------------------------- validation
 
-def validate(r, api):
-    errs = []
+def validate(r, api, brief=""):
+    errs = ground(r, brief) if brief else []
+    seen_customer_tools = set()
+    for item in r["customer_id_fields"]:
+        fields = api["tools"].get(item["tool"], {}).get("fields", {})
+        if item["field"] not in fields:
+            errs.append(f"customer_id_fields: {item['field']!r} is not a request field of {item['tool']!r}")
+        if item["tool"] in seen_customer_tools:
+            errs.append(f"customer_id_fields: duplicate tool {item['tool']!r}")
+        seen_customer_tools.add(item["tool"])
     outs = api_spec.enum(api, "close_call", "outcome")
     reasons = api_spec.enum(api, "close_call", "reason")
     table = {(o["outcome"], o["reason"]) for o in r["outcomes"]}
@@ -264,12 +307,38 @@ def validate(r, api):
             errs.append(f"intent {it['name']}: queue {it['transfer_queue']!r} is not in {queues}")
         if it["note_reason"] and api_spec.enum(api, "add_note", "reason") and it["note_reason"] not in api_spec.enum(api, "add_note", "reason"):
             errs.append(f"intent {it['name']}: note reason {it['note_reason']!r} is not in the add_note enum")
-    types = (api["tools"].get("get_account", {}).get("response", {}).get("products", {}).get("items", {}).get("properties", {}).get("type", {}).get("enum") or [])
+    af = r["account_fields"]
+    resp = api["tools"].get("get_account", {}).get("response", {})
+    if resp.get(af["list"], {}).get("type") != "array":
+        errs.append(f"account_fields.list {af['list']!r} is not an array in the get_account response {list(resp)}")
+    items = resp.get(af["list"], {}).get("items", {}).get("properties", {})
+    def expr_error(x, kind, where):
+        ops = {"amount": {"money", "percent_of", "account_field", "max", "min"}, "date": {"today", "account_date", "band_deadline", "add_days"}}[kind]
+        if not isinstance(x, dict) or x.get("op") not in ops:
+            errs.append(f"{where}: invalid {kind} expression")
+            return
+        op, args, field = x["op"], x["args"], x["field"]
+        wants = {"money": (0, 0), "percent_of": (0, 0), "account_field": (0, 0), "max": (2, 100), "min": (2, 100), "today": (0, 0), "account_date": (0, 0), "band_deadline": (0, 0), "add_days": (1, 1)}[op]
+        if not wants[0] <= len(args) <= wants[1]: errs.append(f"{where}: {op} needs {wants[0]}..{wants[1]} arguments")
+        if op in ("max", "min", "add_days"):
+            for a in args: expr_error(a, kind, where + ".args")
+        if op == "account_field" and (field not in items or items.get(field, {}).get("type") not in ("number", "integer")):
+            errs.append(f"{where}: {field!r} is not a numeric get_account field {list(items)}")
+        if op == "account_date" and (field not in items or items.get(field, {}).get("type") != "string"):
+            errs.append(f"{where}: {field!r} is not a string account date field")
+        if op == "percent_of" and field != "past_due": errs.append(f"{where}: percent_of field must be 'past_due'")
+    for role in ("past_due", "days_late", "product_id", "type"):
+        if af[role] not in items:
+            errs.append(f"account_fields.{role} {af[role]!r} is not a get_account item field {list(items)}")
+    for role in ("past_due", "days_late"):
+        if items.get(af[role], {}).get("type") not in ("number", "integer"):
+            errs.append(f"account_fields.{role} {af[role]!r} is not numeric")
+    types = items.get(af["type"], {}).get("enum") or []
     for p in r["products"]:
+        expr_error(p["floor_rule"], "amount", f"product {p['type']}.floor_rule")
+        expr_error(p["deadline_rule"], "date", f"product {p['type']}.deadline_rule")
         if types and p["type"] not in types:
             errs.append(f"product type {p['type']!r} is not in the get_account enum {types}")
-        if not p["floor_field"] and not p["floor_percent"]:
-            errs.append(f"product {p['type']}: neither floor_field nor floor_percent")
     for t in types:
         if t not in [p["type"] for p in r["products"]]:
             errs.append(f"product type {t!r} from get_account has no products entry")
@@ -294,4 +363,88 @@ def validate(r, api):
         for v in re.findall(r"\{\{(\w+)\}\}", tpl):
             if v not in known:
                 errs.append(f"template variable {{{{{v}}}}} is not a call variable {sorted(known)}")
+    return errs
+
+
+# ---------------------------------------------------------------- grounding: key values must be quoted from the brief
+
+WORDS = {w: i for i, w in enumerate("zero one two three four five six seven eight nine ten eleven twelve".split())}
+WORDS |= {w: i + 1 for i, w in enumerate("first second third fourth fifth sixth seventh eighth ninth tenth".split())}
+WORDS |= {"once": 1, "twice": 2}
+
+
+def _norm(s):
+    """Lowercase, single spaces, no markdown/brace/quote-style noise: what counts as 'word for word'."""
+    s = re.sub(r"[*`{}]", "", str(s)).translate(str.maketrans("‘’“”", "''\"\""))
+    return " ".join(s.lower().split())
+
+
+def _flat(x, p=""):
+    """Rule sheet -> {path: leaf value}, paths in evidence style ('bands.1.attempts')."""
+    # ponytail: positional list paths; an inserted item shows as every later index changing
+    if not isinstance(x, (dict, list)):
+        return {p: x}
+    out = {}
+    for k, v in (x.items() if isinstance(x, dict) else enumerate(x)):
+        out |= _flat(v, f"{p}.{k}" if p else str(k))
+    return out
+
+
+def _key(path):
+    return ".".join(re.findall(r"[^.\[\]\s]+", path))
+
+
+def _at(r, path):
+    try:
+        for k in _key(path).split("."):
+            r = r[int(k)] if isinstance(r, list) else r[k]
+        return r
+    except (KeyError, IndexError, ValueError, TypeError):
+        return None
+
+
+def _states(quote, v):
+    """Whether a normalised quote states value v (digits, number words, ordinals, or the literal text)."""
+    if isinstance(v, (int, float)) and not isinstance(v, bool):
+        said = {float(n) for n in re.findall(r"\d+(?:\.\d+)?", quote)} | {float(WORDS[w]) for w in re.findall(r"[a-z]+", quote) if w in WORDS}
+        return float(v) in said
+    return _norm(v) in quote
+
+
+def ground(r, brief):
+    """Code-side check that key values and phrases come from the brief, not from the model. Errors feed the repair loop."""
+    b, errs = _norm(brief), []
+    for p in r["verbatim_phrases"]:
+        if _norm(p["text"]) not in b:
+            errs.append(f"verbatim phrase is not in the brief word for word: {p['text']!r}")
+    if "evidence" not in r:  # ponytail: sheet from before grounding; re-extract to check its values
+        return errs
+    have = set()
+    for e in r["evidence"]:
+        have.add(_key(e["path"]))
+        q, v = _norm(e["quote"]), _at(r, e["path"])
+        if not q or q not in b:
+            errs.append(f"evidence {e['path']}: the quote is not in the brief word for word: {e['quote'][:150]!r}")
+        elif v is None:
+            errs.append(f"evidence path {e['path']!r} is not a value in the rule sheet")
+        elif not e["derived"] and not _states(q, v):
+            errs.append(f"{e['path']} is {v!r}, but its quote does not state {v!r}: {e['quote'][:150]!r}. Fix the value or quote the text that states it.")
+    need = [f"bands[{i}].{k}" for i in range(len(r["bands"])) for k in ("min_days_late", "max_days_late", "deadline_offset", "attempts")]
+    def expr_paths(e, path):
+        op = e["op"]
+        out = [path + ".op"]
+        if op in ("money", "percent_of", "add_days"): out.append(path + ".value")
+        if op in ("account_field", "account_date", "percent_of"): out.append(path + ".field")
+        if op == "add_days": out.append(path + ".unit")
+        for i, child in enumerate(e["args"]): out += expr_paths(child, f"{path}.args.{i}")
+        return out
+    for i, p in enumerate(r["products"]):
+        need += expr_paths(p["floor_rule"], f"products.{i}.floor_rule")
+        need += expr_paths(p["deadline_rule"], f"products.{i}.deadline_rule")
+    need += [f"calendar.holidays[{i}]" for i in range(len(r["calendar"]["holidays"]))]
+    need += ["opening.max_asks", "identity.max_wrong_total", "third_party.callback.window_start", "third_party.callback.window_end",
+             "third_party.callback.business_days_ahead", "confirmation.retries_on_failure"]
+    missing = [p for p in need if _key(p) not in have]
+    if missing:
+        errs.append("evidence is missing for: " + ", ".join(missing))
     return errs

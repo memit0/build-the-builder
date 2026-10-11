@@ -14,6 +14,7 @@ SETS = {
     "ab": (["briefs/brief-a.md", "briefs/brief-b.md"], "tools/openapi.json"),
     "c": (["dev/briefs/brief-c.md"], "dev/briefs/brief-c.openapi.json"),
     "d": (["dev/briefs/brief-d.md"], "dev/briefs/brief-d.openapi.json"),
+    "a-renamed": (["briefs/brief-a.md"], "dev/briefs/brief-a-renamed.openapi.json"),  # get_account fields renamed
 }
 OUT = ROOT / "dev" / "out"
 
@@ -37,12 +38,13 @@ def selftest(wf, r, api):
     """Run the generated code like the platform would, on synthetic accounts. Returns problems."""
     errs = []
     N = wf["nodes"]
-    item = api["tools"]["get_account"]["response"]["products"]["items"]["properties"]
+    item = api["tools"]["get_account"]["response"][r["account_fields"]["list"]]["items"]["properties"]
+    F = generate.config(r, api)["fields"]
     now = next(v["example"] for v in r["call_vars"]["examples"] if v["name"] == r["call_vars"]["now"])
     for band in r["bands"]:
         prods = []
-        for i, t in enumerate(item["type"].get("enum", ["x"])[:3]):
-            p = {"product_id": f"p{i + 1}", "type": t, "past_due": 900.0, "days_late": band["min_days_late"]}
+        for i, t in enumerate(item[F["r_type"]].get("enum", ["x"])[:3]):
+            p = {F["r_product_id"]: f"p{i + 1}", F["r_type"]: t, F["r_past_due"]: 900.0, F["r_days_late"]: band["min_days_late"]}
             for k, s in item.items():
                 p.setdefault(k, 300.0 if s.get("type") == "number" else "1234")
             prods.append(p)
@@ -55,12 +57,13 @@ def selftest(wf, r, api):
         if V.get("acct_state") != "ok":
             errs.append(f"account code failed for band {band['name']}: {V.get('acct_error')}")
             continue
+        if "900.00" not in V.get("deal_facts", ""):
+            errs.append(f"past-due amount not read from {F['r_past_due']} for band {band['name']}")
         for k in ("deal_facts", "date_table", "debt_text", "first_ask_text"):
             if not V.get(k) or "{{" in str(V[k]):
                 errs.append(f"{k} empty or templated for band {band['name']}")
         tools = {t["function"]["name"]: t for t in N["negotiate"]["tools"]}
         P = json.loads(V["x_prod"])
-        F = generate.config(r, api)["fields"]
         cfg = {"url": "https://x" + api["tools"]["create_promise"]["path"],
                "body": {F["p_pid"]: P[0]["pid"], F["p_amount"]: P[0]["full"], F["p_date"]: P[0]["valid"][-1] if P[0]["valid"] else ""}}
         exec(tools["create_promise"]["pre_process_code"], {"vars": V, "config": cfg})
@@ -99,7 +102,8 @@ def main():
         api = api_spec.load(ROOT / SETS[name][1])
         wf = generate.generate(r, api)
         (OUT / f"{name}.workflow.json").write_text(json.dumps(wf, indent=1))
-        probs = [("validate", e) for e in extract.validate(r, api)] + [("lint", e) for e in lint.lint(wf, r, api)] + [("selftest", e) for e in selftest(wf, r, api)]
+        brief = "\n\n".join((ROOT / b).read_text() for b in SETS[name][0])
+        probs = [("validate", e) for e in extract.validate(r, api, brief)] + [("lint", e) for e in lint.lint(wf, r, api)] + [("selftest", e) for e in selftest(wf, r, api)]
         bad += bool(probs)
         print(f"{'OK  ' if not probs else 'FAIL'} {name}: {len(json.dumps(wf)) // 1000} KB")
         for k, e in probs:

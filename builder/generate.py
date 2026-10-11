@@ -24,6 +24,11 @@ def config(r, api):
     T = api["tools"]
     no_reason = sorted({o["outcome"] for o in r["outcomes"]} - {o["outcome"] for o in r["outcomes"] if o["reason"]})
     promise_outcome = next((p["outcome"] for p in r["close_precedence"] if p["state"] == "promise_recorded"), "promise")
+    def product_rule(p):
+        floor = p.get("floor_rule") or ({"op": "account_field", "field": p["floor_field"], "value": 0, "unit": "", "args": []}
+                                           if p.get("floor_field") else {"op": "percent_of", "field": "past_due", "value": p.get("floor_percent", 0), "unit": "", "args": []})
+        return {"type": p["type"], "spoken": p["spoken"], "floor_rule": floor,
+                "deadline_rule": p.get("deadline_rule") or {"op": "band_deadline", "field": "", "value": 0, "unit": "", "args": []}}
     cfg = {
         "now_var": r["call_vars"]["now"],
         "now_example": next((v["example"] for v in r["call_vars"]["examples"] if v["name"] == r["call_vars"]["now"]), ""),
@@ -36,10 +41,11 @@ def config(r, api):
                      "booked": r["third_party"]["callback"]["booked"], "not_booked": r["third_party"]["callback"]["not_booked"]},
         "bands": [{"name": b["name"], "min": b["min_days_late"], "max": b["max_days_late"], "offset": b["deadline_offset"], "unit": b["deadline_unit"], "attempts": b["attempts"]} for b in r["bands"]],
         "attempts": r["persuasion"]["attempts"],
-        "products": [{k: p[k] for k in ("type", "spoken", "floor_field", "floor_percent")} for p in r["products"]],
+        "products": [product_rule(p) for p in r["products"]],
         "debt_intro": r["debt"]["intro"], "debt_per_product": r["debt"]["per_product"],
         "first_ask": r["first_ask"], "multi_first_ask": r["multi_first_ask"],
         "questions": [{k: q[k] for k in ("field", "ask", "kind", "digits")} for q in r["identity"]["questions"]],
+        "max_wrong_total": r["identity"]["max_wrong_total"],
         "date_order": r["identity"]["numeric_date_order"],
         "hints": {h["value"]: {"instruction": h["instruction"], "wrong": h["counts_as_wrong"]} for h in r["identity"]["hints"]},
         "failed": {k: r["identity"]["failed"][k] for k in ("say", "outcome", "reason")},
@@ -60,6 +66,7 @@ def config(r, api):
             "p_amount": f("create_promise", "amount", type_="number"),
             "n_pid": f("add_note", "product_id", "product"), "n_reason": f("add_note", "reason"),
             "queue": f("transfer_to_agent", "queue"), "outcome": f("close_call", "outcome"), "reason": f("close_call", "reason"),
+            **{"r_" + k: v for k, v in r["account_fields"].items()},
         },
     }
 
@@ -304,6 +311,7 @@ CLOSE_KEYS = ["fields", "precedence", "queue_close", "note_reasons", "no_reason_
 
 
 def generate(r, api):
+    api = {**api, "customer_id_fields": {x["tool"]: x["field"] for x in r.get("customer_id_fields", [])}}
     cfg = config(r, api)
     P = prompts(r)
     cv = r["call_vars"]["customer_id"]
@@ -328,7 +336,7 @@ def generate(r, api):
 
     verify = api_tool(api, "verify_identity", "Checks one security answer. CALL it every time the customer answers a security question, once per answer.", cv,
                       fields={F["id_answer"]: "The customer's answer in the format the question needs: " + "; ".join(f"{q['field']}: {q['how_to_send']}" for q in r["identity"]["questions"]) + "."},
-                      pre=code(cfg, ["fields", "questions", "date_order"], SN.BASE, SN.VERIFY_PRE), post=code(cfg, ["questions", "hints", "failed"], SN.BASE, SN.VERIFY_POST), mapping=[{"path": "data.all_verified", "variable": "all_verified"}])
+                      pre=code(cfg, ["fields", "questions", "date_order"], SN.BASE, SN.VERIFY_PRE), post=code(cfg, ["questions", "hints", "failed", "max_wrong_total"], SN.BASE, SN.VERIFY_POST), mapping=[{"path": "data.all_verified", "variable": "all_verified"}])
     callback = api_tool(api, "schedule_callback", "Books a callback for the customer. CALL it as soon as the person who answered names a day and a time when the customer can be reached.", cv,
                         fields={F["cb_date"]: "YYYY-MM-DD.", F["cb_time"]: "HH:MM, 24-hour."}, pre=code(cfg, ["fields", "callback", "paths"], SN.BASE, SN.CB_PRE), post=code(cfg, ["callback"], SN.BASE, SN.CB_POST))
     promise = api_tool(api, "create_promise", f"Records one payment promise for one product. CALL it only after you read back product, amount and date and the customer clearly said yes to \"{r['confirmation']['readback_question']}\". If it fails, follow what_to_do_next.", cv,
@@ -360,7 +368,7 @@ def generate(r, api):
 
     dk = ["holidays", "business_weekdays", "now_var", "now_example"]
     setup = code(cfg, dk + ["callback"], SN.BASE, SN.DATES, SN.SETUP)
-    account = code(cfg, dk + ["bands", "attempts", "products", "debt_intro", "debt_per_product", "first_ask", "multi_first_ask", "week_starts", "next_weekday", "earliest"], SN.BASE, SN.DATES, SN.ACCOUNT)
+    account = code(cfg, dk + ["fields", "bands", "attempts", "products", "debt_intro", "debt_per_product", "first_ask", "multi_first_ask", "week_starts", "next_weekday", "earliest"], SN.BASE, SN.DATES, SN.ACCOUNT)
     ok = lambda v, val: {"logic": "or", "conditions": [{"variable": v, "operator": "equals", "operand": val}]}
     nodes = {
         "setup": code_node("setup", setup, "setup_retry", [{"target_node": "opening", "description": "setup done", "condition": ok("setup_state", "done")}]),
@@ -378,7 +386,7 @@ def generate(r, api):
         "load_account": {
             "name": "load_account", "node_type": "api_request", "passthrough": True, "passthrough_default_transition": "prepare_deal",
             "on_enter": {"type": "silent"}, "disable_inactivity_monitor": True, "pre_actions": [get_account],
-            "response_mapping": [{"path": "data.products", "variable": "products"}],
+            "response_mapping": [{"path": "data." + F["r_list"], "variable": "products"}],
             "transitions": [{"target_node": "prepare_deal", "description": "always", "condition": {"operator": "always"}}],
         },
         "prepare_deal": code_node("prepare_deal", account, "prepare_retry", [{"target_node": "negotiate", "description": "account ready", "condition": ok("acct_state", "ok")}]),
