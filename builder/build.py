@@ -2,6 +2,7 @@
 
     source env.sh
     python3 builder/build.py BRIEF.md [MORE_BRIEFS.md ...] TOOL_API.json [--slot NAME] [--rules RULES.json] [--no-save] [--test A]
+    python3 builder/build.py CASE_FOLDER TOOL_BASE_URL [--slot NAME]   (folder: every .md/.txt/.pdf in it is read as the brief)
 
 Steps: extract the rule sheet (Claude) -> validate -> generate the workflow (code) -> lint -> save + publish -> chat smoke
 -> export. Every step, model call and Freya id is written to traces/<slot>-<time>.jsonl.
@@ -56,18 +57,43 @@ def smoke(workflow_id, test_vars, log):
     return out
 
 
+TEXT_TYPES = {".md", ".txt", ".pdf"}
+
+
+def read_text(path):
+    if path.suffix == ".pdf":  # ponytail: poppler's pdftotext; no pdf lib in the venv
+        return subprocess.run(["pdftotext", "-layout", str(path), "-"], capture_output=True, text=True, check=True).stdout
+    return path.read_text()
+
+
+def brief_files(args, log):
+    """Brief inputs as files: a folder contributes every text-like file under it, sorted; other types are skipped."""
+    out = []
+    for a in args:
+        p = pathlib.Path(a)
+        if not p.is_dir():
+            out.append(p); continue
+        for f in sorted(p.rglob("*")):
+            if f.is_file():
+                (out.append(f) if f.suffix.lower() in TEXT_TYPES else log({"event": "input_skipped", "path": str(f)}))
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser(usage=__doc__)
-    ap.add_argument("files", nargs="+", help="brief file(s), then the tool API json")
+    ap.add_argument("files", nargs="+", help="brief file(s) or a case folder, then the tool API json or the tools' base URL")
     ap.add_argument("--slot"); ap.add_argument("--rules", help="reuse a rule sheet instead of extracting")
     ap.add_argument("--no-save", action="store_true"); ap.add_argument("--test", help="practice brief letter for run_cases.py (A or B)")
     a = ap.parse_args()
-    briefs = [f for f in a.files if not f.endswith(".json")]
-    tool_api = next(f for f in a.files if f.endswith(".json"))
+    is_api = lambda f: f.endswith(".json") or f.startswith(("http://", "https://"))
+    briefs = [f for f in a.files if not is_api(f)]
+    tool_api = next(f for f in a.files if is_api(f))
     slot = a.slot or "-".join(pathlib.Path(b).stem for b in briefs)
     log = Trace(slot)
     t0 = time.time()
-    log({"event": "start", "briefs": briefs, "tool_api": tool_api, "slot": slot, "builder_model": extract.MODEL})
+    log({"event": "start", "args": a.files, "tool_api": tool_api, "slot": slot, "builder_model": extract.MODEL})
+    briefs = brief_files(briefs, log)
+    log({"event": "inputs", "briefs": [str(b) for b in briefs]})
 
     api = api_spec.load(tool_api)
     out = ROOT / "out"; out.mkdir(exist_ok=True)
@@ -75,7 +101,7 @@ def main():
         rules = json.load(open(a.rules))
         log({"event": "rules_reused", "path": a.rules})
     else:
-        text = "\n\n".join(pathlib.Path(b).read_text() for b in briefs)
+        text = "\n\n".join(f"=== {b} ===\n" + read_text(b) for b in briefs)
         rules = extract.extract(text, api, log=log)
     (out / f"{slot}.rules.json").write_text(json.dumps(rules, indent=1))
     errs = extract.validate(rules, api)

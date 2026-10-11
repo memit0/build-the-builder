@@ -2,7 +2,15 @@
 import json
 
 
+class _Tools(dict):
+    """No spec given: a tool not listed is assumed at <base>/<name> with unknown fields."""
+    def __missing__(self, name):
+        return {"path": "/" + name, "summary": "", "fields": {}, "required": [], "response": {}}
+
+
 def load(path):
+    if path.startswith(("http://", "https://")):  # only a base URL, no OpenAPI document
+        return {"base": path.rstrip("/"), "tools": _Tools(), "info": ""}
     spec = json.load(open(path))
     base = spec["servers"][0]["url"].rstrip("/")
     tools = {}
